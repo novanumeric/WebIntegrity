@@ -15,7 +15,7 @@ Units: <select id="selectUnits" class="updateDisplay"><option>Metric-MPa<option>
 
 </tr>
 <tr><td colspan=2  id="CalcsRatioRow"                >
- <span class="WithHints" title="Major to Minor - Ellipse"  >Ratio (R<sub>ell</sub>):</span>  
+ <span class="WithHints" title="Ratio of Major to Minor Diameter "  >Ratio (R<sub>ell</sub>):</span>  
  <input class="updateDisplay" id="CalcsRatio" size=5 type="text" value="2"> </td></tr>
 <tr><td colspan=2   id="CalcsLocationRow">
  Location:<select class="updateDisplay" id="selectLocation"><option>Center<option>Other</select>      
@@ -63,7 +63,7 @@ Units: <select id="selectUnits" class="updateDisplay"><option>Metric-MPa<option>
 <tr><td colspan=2 class="MaterialFilters" style="display:none;">&nbsp;&nbsp;Spec No: <select id="selectSpecNo" class="updateDisplay"></select></td></tr>
 
 
-<tr><td colspan=2 class="CalcsInputs" id="CalcsAllowableStressRow"      ><span class="WithHints" title="Allowable Stress"          >Allowable Stress(S):</span>                           <input class="updateDisplay" id="CalcsAllowableStress" size=5 type="text" value="">                 <span class="StressUnits"></span></td></tr>
+<tr><td colspan=2 class="CalcsInputs" id="CalcsAllowableStressRow"      ><span class="WithHints" title="Allowable Stress"          >Allowable Stress(S):</span>                           <input class="updateDisplay" id="CalcsAllowableStress" size=5 type="text" value="20">                 <span class="StressUnits"></span></td></tr>
 
 <tr><td  colspan=2 ><span class="WithHints" title="Select Thickness Reading Form"> Input Type:</span> <select class="updateDisplay" id="selectInputType"><option>Critical Thickness Profile(CTP)<option>Thickness Grid(GRID)<option>Point Thickness Readings(PTR)</select></td></tr>
 

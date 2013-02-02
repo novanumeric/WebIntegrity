@@ -46,15 +46,13 @@ function formatLengthResults($val,$LengthUnits) {
 		if($FFSLevel=="Level 2") {
 			$RSFa=0.9;
 			$GMLThicknessCalcResult.="|n| RSF_{a}=".$RSFa." |n| RSF_{a}\\times{t_{min}}=".formatLengthResults($RSFa*$tmin,$LengthUnits). "} |n|  ";
-			$temp="RSF_a";
+			$temp="RSF_a\\times";
 		} else {
 			$RSFa=1;
 			$GMLThicknessCalcResult.="|n|";
 			$temp="";
 		}
-		//$equation="|n|";
 		$GMLThicknessCalcResult.="{t_{am}}-FCA=" . formatLengthResults($tam-$FCA,$LengthUnits). "} |n|  ";
-		//$GMLThicknessCalcResult.="{t_{am}}-FCA=" . formatLengthResults($tam-$FCA,$LengthUnits). "} |n|  ";	
 		if($tmin=="") {
 			$GMLThicknessCalcResult.="|n|{t_{min}}\\ \\textup{ is not specified}";
 		} else if($tam-$FCA>=$RSFa*$tmin) {
@@ -130,7 +128,7 @@ function formatLengthResults($val,$LengthUnits) {
 
 	}
 
-	$GMLThicknessCalcResult.="|n| t_{mm}-FCA=".($tmm-$FCA)."|n|";
+	$GMLThicknessCalcResult.="|n| t_{mm}-FCA=".formatLengthResults($tmm-$FCA,$LengthUnits)."|n|";
 	if(($tmm-$FCA)>=max(0.5*$tmin,$tlim)) {
 
 		$GMLThicknessCalcResult.="t_{mm}-FCA\\geq\\max\\left[0.5t_{min},t_{lim}\\right]=".round(max(0.5*$tmin,$tlim),3) . "\\ \\textup{" .  $LengthUnits ."}|n|";
