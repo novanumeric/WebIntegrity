@@ -1,0 +1,9 @@
+#
+
+Please note this software is in development, not complete and not fully tested. Please contact me.
+Jeff Brubaker
+brubaker.jeff@gmail.com
+1. Install Apache, Php, and Latex per standard process. The equations are generated via Latex and converted to an image
+2. Decompress contents of zip files
+3. Ensure functions/Common/Cache and functions/Common/tmp are writeable by the web user
+

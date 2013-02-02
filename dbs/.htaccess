@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Restricted Files"
+AuthUserFile /home/novanumeric/nordynepwd
+Require user jeff jan james

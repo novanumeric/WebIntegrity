@@ -1,0 +1,70 @@
+10
+
+dir
+0
+https://rgue.dyndns.org:8443/svn/industrialselector/trunk/novanumericweb/www/thinning/js
+https://rgue.dyndns.org:8443/svn/industrialselector
+add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+79be9f78-0878-7744-bafe-95132872b0f7
+
+jquery-1.7.2.min.js
+file
+
+
+
+add
+
+jquery.jqGrid.src.js
+file
+
+
+
+add
+
+i18n
+dir
+
+
+
+add
+
+install.txt
+file
+
+
+
+add
+
+Changes.txt
+file
+
+
+
+add
+
+jquery.jqGrid.min.js
+file
+
+
+
+add
+

@@ -1,0 +1,126 @@
+10
+
+dir
+0
+https://rgue.dyndns.org:8443/svn/industrialselector/trunk/novanumericweb/www/thinning/functions
+https://rgue.dyndns.org:8443/svn/industrialselector
+add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+79be9f78-0878-7744-bafe-95132872b0f7
+
+render_example.php
+file
+
+
+
+add
+
+calculateAVG.php
+file
+
+
+
+add
+
+B31G.py
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+test.php
+file
+
+
+
+add
+
+render.php
+file
+
+
+
+add
+
+calculateResults.php
+file
+
+
+
+add
+
+sharedCode.php
+file
+
+
+
+add
+
+Common
+dir
+
+
+
+add
+
+render.class.php
+file
+
+
+
+add
+
+calculateCOV.php
+file
+
+
+
+add
+
+calculateCTPS.php
+file
+
+
+
+add
+
+calculateLTACTPS.php
+file
+
+
+
+add
+
+calculateCODE.php
+file
+
+
+
+add
+

@@ -1,0 +1,15 @@
+function wrap($thunk) {
+  return <<<EOS
+    \documentclass[10pt]{article}
+    % add additional packages here
+    \usepackage{amsmath}
+    \usepackage{amsfonts}
+    \usepackage{amssymb}
+    \usepackage{pst-plot}
+    \usepackage{color}
+    \pagestyle{empty}
+    \begin{document}
+    $thunk
+    \end{document}
+EOS;
+}
