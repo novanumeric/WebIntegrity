@@ -1,11 +1,6 @@
 <?
 
-function formatLengthResults($val,$LengthUnits) {
-	$buf="";
-	$buf.=round($val,4);
-	$buf.="\\ \\textup{".$LengthUnits."}";
-	return $buf;
-}
+	require "sharedCode.php";
 
 	$RSFa=1;
 	$FFSLevel=$_REQUEST["FFSLevel"];
@@ -114,28 +109,29 @@ function formatLengthResults($val,$LengthUnits) {
 		}
 	}
 	
-	$GMLThicknessCalcResult.="|n| \\textup{Minimum Measured Thickness Criteria} ";
-	if($LengthUnits=="mm") {
-		$tlim=max(0.2*$tnom,2.5);
-		$GMLThicknessCalcResult.="|n| t_{lim}=\\max\\left[0.2{t_{nom}},2.5\\ \\textup{mm}\\right]=".round($tlim,3)."\\ \\textup{mm}|n|";
-	} else {
-		$tlim=max(0.2*$tnom,0.1);	
-		$GMLThicknessCalcResult.="|n| {t_{lim}}=\\max\\left[0.2{t_{nom}},0.1\\ \\textup{in}\\right]=".round($tlim,3)."\\ \\textup{in} |n|";
-	}
-	if(($InputType=="Point Thickness Readings(PTR)") && ($Calc=="PRESS")) {
-		$tmin=$tam-$FCA;
-		$GMLThicknessCalcResult.="{t_{min}}=t_{am}-FCA=".round($tmin,4)."\\ \\textup{" .  $LengthUnits ."}|n|";
 
-	}
+	if(strpos($AnalysisProcedure,"Local Thickness Area - LTA") <=0){
+		$GMLThicknessCalcResult.="|n| \\textup{Minimum Measured Thickness Criteria} ";
+		if($LengthUnits=="mm") {
+			$tlim=max(0.2*$tnom,2.5);
+			$GMLThicknessCalcResult.="|n| t_{lim}=\\max\\left[0.2{t_{nom}},2.5\\ \\textup{mm}\\right]=".round($tlim,3)."\\ \\textup{mm}|n|";
+		} else {
+			$tlim=max(0.2*$tnom,0.1);	
+			$GMLThicknessCalcResult.="|n| {t_{lim}}=\\max\\left[0.2{t_{nom}},0.1\\ \\textup{in}\\right]=".round($tlim,3)."\\ \\textup{in} |n|";
+		}
+		if(($InputType=="Point Thickness Readings(PTR)") && ($Calc=="PRESS")) {
+			$tmin=$tam-$FCA;
+			$GMLThicknessCalcResult.="{t_{min}}=t_{am}-FCA=".round($tmin,4)."\\ \\textup{" .  $LengthUnits ."}|n|";
 
-	$GMLThicknessCalcResult.="|n| t_{mm}-FCA=".formatLengthResults($tmm-$FCA,$LengthUnits)."|n|";
-	if(($tmm-$FCA)>=max(0.5*$tmin,$tlim)) {
+		}
+		$GMLThicknessCalcResult.="|n| t_{mm}-FCA=".formatLengthResults($tmm-$FCA,$LengthUnits)."|n|";
+		if(($tmm-$FCA)>=max(0.5*$tmin,$tlim)) {
 
-		$GMLThicknessCalcResult.="t_{mm}-FCA\\geq\\max\\left[0.5t_{min},t_{lim}\\right]=".round(max(0.5*$tmin,$tlim),3) . "\\ \\textup{" .  $LengthUnits ."}|n|";
-	} else {
-		$GMLThicknessCalcResult.=" {\\color{Red}t_{mm}-FCA<\\max\\left[0.5t_{min},t_{lim}\\right]=".round(max(0.5*$tmin,$tlim),3)."\\ \\textup{" .  $LengthUnits ."}} |n|";
+			$GMLThicknessCalcResult.="t_{mm}-FCA\\geq\\max\\left[0.5t_{min},t_{lim}\\right]=".round(max(0.5*$tmin,$tlim),3) . "\\ \\textup{" .  $LengthUnits ."}|n|";
+		} else {
+			$GMLThicknessCalcResult.=" {\\color{Red}t_{mm}-FCA<\\max\\left[0.5t_{min},t_{lim}\\right]=".round(max(0.5*$tmin,$tlim),3)."\\ \\textup{" .  $LengthUnits ."}} |n|";
+		}
 	}
-	
 	$details=array('GMLThicknessCalcResult'=>$GMLThicknessCalcResult);
 	echo json_encode($details);
 ?>

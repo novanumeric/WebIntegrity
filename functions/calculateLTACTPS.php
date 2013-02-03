@@ -20,8 +20,7 @@ $Angle=$_REQUEST["Angle"];
 $Location=$_REQUEST["Location"];
 $FFSLevel=$_REQUEST["FFSLevel"];
 $Ratio=$_REQUEST["Ratio"];
-$CTPInputC=preg_split("/[\s,]+/",$CTPInputC);
-$CTPInputM=preg_split("/[\s,]+/",$CTPInputM);
+
 $RSFC=0;
 $RSFM=0;
 $RSF=0;
@@ -29,13 +28,8 @@ $KEllipsoide="";
 $M="";
 $Lkc="";
 require "sharedCode.php";
+require "sharedIterative.php";
 
-function formatLengthResults($val,$LengthUnits) {
-	$buf="";
-	$buf.=round($val,4);
-	$buf.="\\ \\textup{".$LengthUnits."}";
-	return $buf;
-}
 
 function calculateRSF($Rt,$Mt,&$CTPInputImg) {
 
@@ -44,38 +38,64 @@ function calculateRSF($Rt,$Mt,&$CTPInputImg) {
 	return $RSF;
 }
 
-function calculateMt($ShellType,$lambda,&$CTPInputImg) {
-	if($ShellType=="Sphere") {
-		$Mt=(1.0005  +0.49001*$lambda+0.32409*pow($lambda,2))/(1.0+0.50144*$lambda-0.011067*pow($lambda,2));
-		$CTPInputImg.="M_t=\\frac{1.0005%2b0.49011\\lambda%2b0.32409\\lambda^2}{1.0%2b0.50144\\lambda-0.011067\\lambda^2}=".round($Mt,4)."|n|";
-	} else {
-		$Mt=1.0010 - 0.014195*$lambda+0.29090*pow($lambda,2)-0.096420*pow($lambda,3)+0.020890*pow($lambda,4)-0.0030540*pow($lambda,5)+2.9570/pow(10,4)*pow($lambda,6)-1.8462/pow(10,5)*pow($lambda,7)+7.1553/pow(10,7)*pow($lambda,8)-1.5631/pow(10,8)*pow($lambda,9)+1.4656/pow(10,10)*pow($lambda,10);
-		$CTPInputImg.="M_t=1.0010-0.014195\\lambda%2b0.29090\\lambda^2-0.096420\\lambda^3%2b0.020890\\lambda^4|n|-0.0030540\\lambda^5%2b2.9570\\times10^4\\lambda^{-6}-1.8462\\times10^{-5}\\lambda^7|n|%2b7.1533\\times10^{-7}\\lambda^8-1.5631\\times10^{-8}\\lambda^9%2b1.4656\\times10^{-10}\\lambda^10|n|=".round($Mt,4)."|n|";
-	}
-	return $Mt;
-}
 
-if($selectFlawDimensions=="Length") {
-	$CircumferentialSpacing=$CircumferentialLength/(count($CTPInputM)-1);
-	$LongitudinalSpacing=$LongitudinalLength/(count($CTPInputC)-1);
-} else {
-	$LongitudinalLength=$LongitudinalSpacing*(count($CTPInputC)-1);
-	$CircumferentialLength=$CircumferentialSpacing*(count($CTPInputM)-1);
-}
+
 
 
 $tc=($tnom-$FCA-$UniformLoss);
-$tmm=min(min($CTPInputM),min($CTPInputC));
-$N1=count($CTPInputC);
-$N2=count($CTPInputM);
+if($CTPInputM!=""&&$CTPInputC!="") {
+	
+	$CTPInputC=preg_split("/[\s,]+/",$CTPInputC);
+	$CTPInputM=preg_split("/[\s,]+/",$CTPInputM);
+	$tmm=min(min($CTPInputM),min($CTPInputC));
+	$N1=count($CTPInputC);
+	$N2=count($CTPInputM);
+} elseif($CTPInputM!="") {
+	$CTPInputM=preg_split("/[\s,]+/",$CTPInputM);
+	$tmm=min($CTPInputM);
+	$N1=0;
+	$N2=count($CTPInputM);
+} elseif($CTPInputC!="") {
+	$CTPInputC=preg_split("/[\s,]+/",$CTPInputC);
+	$tmm=min($CTPInputC);
+	$N1=count($CTPInputC);
+	$N2=0;
+} else {
+	$tmm=0;
+	$N1=0;
+	$N2=0;
+}
+if($selectFlawDimensions=="Length") {
+	if(count($CTPInputM)==1) {
+		$LongitudinalSpacing=$LongitudinalLength;
+	} else {
+		$LongitudinalSpacing=$LongitudinalLength/(count($CTPInputM)-1);
+	}
+	if(count($CTPInputC)==1) {
+		$CircumferentialSpacing=$CircumferentialLength;
+	} else {
+		$CircumferentialSpacing=$CircumferentialLength/(count($CTPInputC)-1);
+	}
+} elseif($selectFlawDimensions=="Spacing") {
+	$LongitudinalLength=$LongitudinalSpacing*(count($CTPInputM)-1);
+	$CircumferentialLength=$CircumferentialSpacing*(count($CTPInputC)-1);
+}
 
+if($selectFlawDimensions=="Length"||$selectFlawDimensions=="Spacing") {
+	for($Se=0;$Se<$N2;$Se++) { 		
+		$CTPInputMLengths[$Se]=$LongitudinalSpacing*$Se;
+	}
+
+} else {
+	$CTPInputMLengths=$_REQUEST["CTPInputMLengths"];
+	$CTPInputMLengths=preg_split("/[\s,]+/",$CTPInputMLengths);
+}
 
 $CTPInputImg="|n|\\textup{Calculating LTA} |n|";
 
 $CTPInputImg.="D=D%2b2FCA%2b2LOSS=".formatLengthResults($Diameter+2*$FCA+2*$UniformLoss,$LengthUnits)."|n|";
 $CTPInputImg.="t_{c}={t_{nom}-FCA-LOSS}=".formatLengthResults($tc,$LengthUnits)."|n|";
-#$CTPInputImg.="s=".$s."|n|";
-#$CTPInputImg.="\\lambda=\\frac{1.285s}{\\sqrt{Dt_c}}=";
+
 if($LengthUnits=="mm") {
 	if($tmm-$FCA>2.5){
 		$CTPInputImg.="|n|{\\color{Black}t_{mm}-FCA=".formatLengthResults($tmm-$FCA,$LengthUnits)."\\geq2.5\\ \\textup{mm}}|n|";
@@ -116,30 +136,13 @@ $CTPInputImg.="\\textup{Check Groove Radius}\\ gr\\overset{?}{\\geq}\\left(1-R_t
 if($FFSLevel=="Level 1") {
 	
 	$lambdaS=1.285*$LongitudinalLength/sqrt(($Diameter+2*$FCA+2*$LOSS)*$tc);
+	$CTPInputImg.="s=".formatLengthResults($LongitudinalLength,$LengthUnits)."|n|";
+	$CTPInputImg.="\\lambda=\\frac{1.285s}{\\sqrt{Dt_c}}=".round($lambdaS,4)."|n|";
 	$Mt=calculateMt($ShellType,$lambdaS,$CTPInputImg);
 	$RSF=calculateRSF($Rt,$Mt,$CTPInputImg);
-	$CTPInputImg.="s=\\Delta S\\times ".($N1-1)."=".formatLengthResults($LongitudinalLength,$LengthUnits)."|n|";
-	$CTPInputImg.="\\lambda_S=\\frac{1.285s}{\\sqrt{Dt_c}}=".round($lambdaS,4)."|n|";
-//	$CTPInputImg.="M_t=".$Mt."|n|";
-//	$CTPInputImg.="RSF=".round($RSF,4)."|n|";
+
 	if($ShellType=="Cylinder"||$ShellType=="Cone") {
-		$CTPInputImg.="|n|\\textup{Checking Circumferential Plane} |n|";
-		$CTPInputImg.="c=".formatLengthResults($CircumferentialLength,$LengthUnits)."|n|";
-		$lambdaC=1.285*$CircumferentialLength/sqrt(($Diameter+2*$FCA)*$tc);
-		$CTPInputImg.="\\lambda_C=\\frac{1.285c}{\\sqrt{Dt_c}}=".round($lambdaC,4)."|n|";
-		$EL=1;
-		$EC=1;
-		$TSF=$EC/(2*$RSF);
-		$temp=sqrt(4-3*pow($EL,2));
-		$TSF=$TSF*(1+$temp/$EL);
-		$CTPInputImg.="TSF=\\frac{E_c}{2\\times\\ RSF}\\left(1%2b\\frac{\\sqrt{4-3E^2_L}}{E_L}\\right)=".round($TSF,4)."|n|";
-		$Rtmin=calculateRTMinFrmTSF($TSF,$lambdaC);
-		$CTPInputImg.="R_{tmin}=".round($Rtmin,4)."\\ \\textup{See Figure 5.8} |n|";
-		if($Rt<$Rtmin) {
-			$CTPInputImg.="{\\color{red}R_{t}< R_{tmin}} |n|";
-		}else {
-			$CTPInputImg.="R_{t}\\geq R_{tmin} |n|";
-		}
+		CircumferentialCheck($RSFC,$Rt,$RSF,$CircumferentialLength,$LengthUnits,$Diameter,$FCA,$tc,$CTPInputImg);
 	}
 	$CTPInputCImg="\\textup{Only}\\ t_{mm}=$tmm\\ \\textup{is used for Level 1 Analysis}|n|";
 	$CTPInputMImg="\\textup{Only}\\ t_{mm}=$tmm\\ \\textup{is used for Level 1 Analysis}|n|";	
@@ -150,24 +153,27 @@ if($FFSLevel=="Level 1") {
 		$CTPInputCImg="...|n|";
 		$CTPInputMImg="...|n|";
 	} else {
-		if($N1<=1) {
-			$RSFC="-1";
-			$CTPInputCImg="\\textup{Insufficient data points}";
-		} else {
-			$RSFC=calculateRSFIterative($CTPInputC,$CTPInputCImg,$ShellType,$N1,$Diameter,$tc,$CircumferentialSpacing,$LengthUnits,'C');
-			$CTPInputCImg="|n|\\Delta C=".formatLengthResults($CircumferentialSpacing,$LengthUnits).$CTPInputCImg;
 
-		}
 
 		if($N2<=1) {
 			$RSFM="-1";
 			$CTPInputMImg="\\textup{Insufficient data points}";
 		} else {
 			$CTPInputMImg="";
-			$RSFM=calculateRSFIterative($CTPInputM,$CTPInputMImg,$ShellType,$N2,$Diameter,$tc,$LongitudinalSpacing,$LengthUnits,'S');
-			$CTPInputMImg="|n|\\Delta S=".formatLengthResults($LongitudinalSpacing,$LengthUnits).$CTPInputMImg;
+			$RSFM=calculateRSFIterative($CTPInputM,$CTPInputMLengths,$CTPInputMImg,$ShellType,$Diameter,$tc,$LengthUnits);
+	//		$CTPInputMImg="|n|\\Delta S=".formatLengthResults($LongitudinalSpacing,$LengthUnits).$CTPInputMImg;
 		}
+
+		if($N1<1) {
+			$RSFC="-1";
+			$CTPInputCImg="\\textup{Insufficient data points}";
+		} else {
+			$CTPInputCImg="\\textup{No calculations}|n|";
+			CircumferentialCheck($RSFC,$Rt,$RSFM,$CircumferentialLength,$LengthUnits,$Diameter,$FCA,$tc,&$CTPInputImg);
+		}
+		
 	}
+
 	$RSF=min($RSFM,$RSFC);
 }
 $details=array('tmm'=>$tmm,'Lkc'=>$Lkc,'M'=>$M,'KEllipsoide'=>$KEllipsoide,'CTPInputImg'=>$CTPInputImg,'CTPInputCImg'=>$CTPInputCImg,'CTPInputMImg'=>$CTPInputMImg,'RSFC'=>$RSFC,'RSFM'=>$RSFM,'RSF'=>$RSF);
@@ -268,7 +274,7 @@ function calculateRTMinFrmTSF($TSF,$lambdaC){
 		for($row=0;$row<8;$row++){
 			$TSFLow=$coeffs[$row][0];
 			$TSFHigh=$coeffs[$row+1][0];
-			if($TSF>=$TSFLOW&&TSF<=$TSFHigh)
+			if($TSF>=$TSFLow&&$TSF<=$TSFHigh)
 			{
 				$scale=($TSF-$TSFLow)/($TSFHigh-$TSFLow);
 				$lambdac02=$coeffs[$row][1]+$scale*($coeffs[$row+1][1]-$coeffs[$row][1]);
@@ -288,52 +294,26 @@ function calculateRTMinFrmTSF($TSF,$lambdaC){
 		return($Rt);
 	}
 }
-function calculateRSFIterative($CTPInput,&$CTPInputImg,$ShellType,$N,$Diameter,$tc,$CalcsSpacing,$LengthUnits,$Abbr) {
-	$CTPInputImg="";
+function CircumferentialCheck(&$RSFC,$Rt,$RSF,$CircumferentialLength,$LengthUnits,$Diameter,$FCA,$tc,&$CTPInputImg) {
+		$CTPInputImg.="|n|\\textup{Checking Circumferential Plane} |n|";
+		$CTPInputImg.="c=".formatLengthResults($CircumferentialLength,$LengthUnits)."|n|";
+		$lambdaC=1.285*$CircumferentialLength/sqrt(($Diameter+2*$FCA)*$tc);
+		$CTPInputImg.="\\lambda_C=\\frac{1.285c}{\\sqrt{Dt_c}}=".round($lambdaC,4)."|n|";
+		$EL=1;
+		$EC=1;
 
-	$RSF=1.0;
-	$processed=Array();
-	for($Se=0;$Se<$N;$Se++) { 		
-		for($Ss=0;$Ss<$Se;$Ss++) {
-			$Ai=0;
-			$tempMt="";
-			$spreadLength=($Se-$Ss)*$CalcsSpacing;
-			$lambda=1.285*$spreadLength/sqrt($Diameter*$tc);
-			$Ai0=$spreadLength*$tc;	
-			$calcRSF=false;
-			$Mt=calculateMt($ShellType,$lambda,$tempMt);
-			$temp=($Ss) ." to ". ($Se);
-			if(!array_key_exists($temp,$processed)) {
-				$processed[$temp]='true';
-				$Ai=0;
-				for($Ss2=$Ss;$Ss2<$Se;$Ss2++) {
-					$left=$Ss2;
-					$right=$Ss2+1;
-					$b=$right*$CalcsSpacing;;
-					$a=$left*$CalcsSpacing;
-					$AA=$tc-$CTPInput[$left];
-					$BB=$tc-$CTPInput[$right];
-					$deltaAi=($b-$a)*($AA+$BB)/2;
-					$Ai+=$deltaAi;
-					$calcRSF=true;
-				}
-				if($calcRSF==true) {
-					$RSFCurrent=(1-($Ai)/($Ai0))/(1-(1/$Mt)*($Ai/$Ai0));
-					$tempSs=($Ss)*$CalcsSpacing;
-					$tempSe=($Se)*$CalcsSpacing;
-					if($RSFCurrent<=$RSF) {
-						$RSF=$RSFCurrent;
-						$CTPInputImg="|n|S_s=".formatLengthResults($tempSs,$LengthUnits)."\\ S_e=".formatLengthResults($tempSe,$LengthUnits)."\\ \\|n|";
-						$CTPInputImg.="{A_i}=$Ai|n|\\ {Ai_0}=\\left(S_e-S_S\\right){t_c}=$Ai0 |n|";
-						$CTPInputImg.="\\lambda=\\frac{1.285{\\left(S_e-S_s\\right)}}{\\sqrt{Dt_c}}=".round($lambda,4)."|n|";
-						$CTPInputImg.=$tempMt;
-						$CTPInputImg.="\\textup{RSF}=".round($RSF,3)."|n|";
-					}
-				}
-			}
+		$temp=sqrt(4-3*pow($EL,2));
+		$TSF=$EC/(2*$RSF)*(1+$temp/$EL);
+		$CTPInputImg.="TSF=\\frac{E_c}{2\\times\\ RSF}\\left(1%2b\\frac{\\sqrt{4-3E^2_L}}{E_L}\\right)=".round($TSF,4)."|n|";
+		$Rtmin=calculateRTMinFrmTSF($TSF,$lambdaC);
+		$CTPInputImg.="R_{tmin}=".round($Rtmin,4)."\\ \\textup{See Figure 5.8} |n|";
+		if($Rt<$Rtmin) {
+			$RSFC=0;
+			$CTPInputImg.="{\\color{red}R_{t}< R_{tmin}} |n|";
+		}else {
+			$RSFC=1;
+			$CTPInputImg.="R_{t}\\geq R_{tmin} |n|";
 		}
-	}
-	return $RSF;
 }
 
 

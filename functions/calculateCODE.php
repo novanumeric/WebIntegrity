@@ -1,21 +1,10 @@
 <?
+
+require "sharedCode.php";
+
 $CodeCalculation= new CodeCalculationsClass();
 $CodeCalculation->LoadVariables();
 echo json_encode($CodeCalculation->processEquations());
-
-function formatAngleResults($val) {
-	$buf="";
-	$buf.=round($val,4);
-	$buf.="^\\circ";
-	return $buf;
-}
-
-function formatLengthResults($val,$LengthUnits) {
-	$buf="";
-	$buf.=round($val,4);
-	$buf.="\\ \\textup{".$LengthUnits."}";
-	return $buf;
-}
 
 class CodeCalculationsClass
 {
@@ -27,18 +16,7 @@ class CodeCalculationsClass
 	public $Loss;
 	public $RSFC,$RSFM,$RSF;
 	public $KEllipsoide,$M,$Lkc;
-	function formatPressureResults($val) {
-		$buf="";
-		if(strtoupper($this->PressureUnits)=="BAR") {
-			$val=$val/100000;
-		}
-		if(strtoupper($this->PressureUnits)=="MPA") {
-			$val=$val/1000000;
-		}
-		$buf.=round($val,4);
-		$buf.="\\ \\textup{".$this->PressureMoniker."}";
-		return $buf;
-	}
+
 
 	
 	function LoadVariables(){
@@ -134,36 +112,34 @@ class CodeCalculationsClass
 			$tempc="^c";
 			$tc=min($tcs,$tcc);
 		}
-
 		if($this->ShellType=="Cylinder") {
 			if($tc<=0.5*$this->Radius) {
 				$Equation.="|n|t_{c}<\\frac{1}{2}R|n|";
 				$MAWPC=$this->Stress*$this->WeldJointEfficiency*$tcs/($this->Radius+0.6*$tcs);
-				$Equation.="|n|MAWP^C=\\frac{SEt".$temps."_{c}}{R+0.6t".$temps."c}=".$this->formatPressureResults($MAWPC)."|n|";
+				$Equation.="|n|MAWP^C=\\frac{SEt".$temps."_{c}}{R+0.6t".$temps."c}=".formatPressureResults($MAWPC,$this->PressureUnits)."|n|";
 				$MAWPL=2*$this->Stress*$this->WeldJointEfficiency*$tcc/($this->Radius-0.4*$tcc);
-				$Equation.="|n|MAWP^L=\\frac{2SE(t".$tempc."_c)}{R-0.4t".$tempc."c}=".$this->formatPressureResults($MAWPL)."|n|";
+				$Equation.="|n|MAWP^L=\\frac{2SE(t".$tempc."_c)}{R-0.4t".$tempc."c}=".formatPressureResults($MAWPL,$this->PressureUnits)."|n|";
 			} else {
 				$Equation.="|n|t_{c}\\geq\\frac{1}{2}R|n|";
 				$temp1=pow(($this->Radius+$tcs)/$this->Radius,2)-1;
 				$temp2=pow(($this->Radius+$tcs)/$this->Radius,2)+1;
 				$MAWPC=$this->Stress*$this->WeldJointEfficiency*($temp1)/$temp2;
-				$Equation.="|n|MAWP^C=SE\\left[\\left(\\frac{R+t".$temps."_c}{R}\\right)^2-1\\right]\\left[\\left(\\frac{R+t_c}{R}\\right)^2+1\\right]^{-1}=".$this->formatPressureResults($MAWPC);
+				$Equation.="|n|MAWP^C=SE\\left[\\left(\\frac{R+t".$temps."_c}{R}\\right)^2-1\\right]\\left[\\left(\\frac{R+t_c}{R}\\right)^2+1\\right]^{-1}=".formatPressureResults($MAWPC,$this->PressureUnits);
 				$temp=pow(($this->Radius+$tcc)/$this->Radius,2);
 				$MAWPL=2*$this->Stress*$this->WeldJointEfficiency*($temp-1);
-				$Equation.="|n|MAWP^L=SE\\left[\\left(\\frac{R+t".$tempc."_c}{R}\\right)^2-1\\right]=".$this->formatPressureResults($MAWPL);
+				$Equation.="|n|MAWP^L=SE\\left[\\left(\\frac{R+t".$tempc."_c}{R}\\right)^2-1\\right]=".formatPressureResults($MAWPL,$this->PressureUnits);
 			}
 
 			
 			if(strpos($this->AnalysisProcedure,"Local Thickness Area - LTA")>0&&$this->InputType!="Point Thickness Readings(PTR)") {
 				$MAWP=min($MAWPC,$MAWPL);
-				$Equation.="|n|MAWP=\\min\\left[MAWP^C,MAWP^L\\right]=".$this->formatPressureResults($MAWP)."|n|";
+				$Equation.="|n|MAWP=\\min\\left[MAWP^C,MAWP^L\\right]=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 				$RSFa=0.9;
-				$MAWP=min($this->RSF,$RSFa)/$RSFa*$MAWP;
-				$Equation.="RSF_a=$RSFa|n|";
-				$Equation.="|n|MAWP_r=MAWP\\frac{\\max\\left[RSF,RSA_a\\right]}{RSF_a}=".$this->formatPressureResults($MAWP)."|n|";
+				$MAWP=min($this->RSF,$RSFa)/$RSFa*$MAWP;				
+				$Equation.="|n|MAWP_r=MAWP\\frac{\\max\\left[RSF,RSA_a\\right]}{RSF_a}=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 			} else {
 				$MAWP=min($MAWPC,$MAWPL);
-				$Equation.="|n|MAWP_r=\\min\\left[MAWP^C,MAWP^L\\right]=".$this->formatPressureResults($MAWP)."|n|";
+				$Equation.="|n|MAWP_r=\\min\\left[MAWP^C,MAWP^L\\right]=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 			}
 		}elseif($this->ShellType=="Cone"||$this->ShellType=="Toricone") {
 			$tempAngle=cos($this->Angle*pi()/180);
@@ -171,36 +147,36 @@ class CodeCalculationsClass
 			$Equation.="|n|t_{c}<\\frac{1}{2}R|n|";
 	
 			$MAWPC=2*$this->Stress*$this->WeldJointEfficiency*$tcs*$tempAngle/($this->Diameter+1.2*$tcs*$tempAngle);
-			$Equation.="|n|MAWP^C=\\frac{2SEt".$temps."_{c}\\cos\\left[\\alpha\\right]}{D+1.2t".$temps."_c\\cos\\left[\\alpha\\right]}=".$this->formatPressureResults($MAWPC)."|n|";
+			$Equation.="|n|MAWP^C=\\frac{2SEt".$temps."_{c}\\cos\\left[\\alpha\\right]}{D+1.2t".$temps."_c\\cos\\left[\\alpha\\right]}=".formatPressureResults($MAWPC,$this->PressureUnits)."|n|";
 			$MAWPL=4*$this->Stress*$this->WeldJointEfficiency*$tcc*$tempAngle/($this->Diameter-0.8*$tcc*$tempAngle);
-			$Equation.="|n|MAWP^L=\\frac{4SE(t".$tempc."_c)\\cos\\left[\\alpha\\right]}{D-0.8t".$tempc."_c\\cos\\left[\\alpha\\right]}=".$this->formatPressureResults($MAWPL)."|n|";
+			$Equation.="|n|MAWP^L=\\frac{4SE(t".$tempc."_c)\\cos\\left[\\alpha\\right]}{D-0.8t".$tempc."_c\\cos\\left[\\alpha\\right]}=".formatPressureResults($MAWPL,$this->PressureUnits)."|n|";
 	
 			if($this->ShellType=="Toricone") {
 				$MAWPK=2*$this->Stress*$this->WeldJointEfficiency*$tcs/($this->Lkc*$this->M+0.2*$tcs);
-				$Equation.="|n|MAWP^k=\\frac{2SEt}{L_{kc}M+0.2{t}}=".$this->formatPressureResults($MAWPK)."|n|";	
+				$Equation.="|n|MAWP^k=\\frac{2SEt}{L_{kc}M+0.2{t}}=".formatPressureResults($MAWPK,$this->PressureUnits)."|n|";	
 			}
 			if(strpos($this->AnalysisProcedure,"Local Thickness Area - LTA")>0&&$this->InputType!="Point Thickness Readings(PTR)") {
 				if($this->ShellType=="Toricone") {
 					$MAWP=min($MAWPC,$MAWPL,$MAWPK);
-					$Equation.="|n|MAWP=\\min\\left[MAWP^C,MAWP^L,MAWP^K\\right]=".$this->formatPressureResults($MAWP)."|n|";
+					$Equation.="|n|MAWP=\\min\\left[MAWP^C,MAWP^L,MAWP^K\\right]=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 					
 				} else {
 					$MAWP=min($MAWPC,$MAWPL);
-					$Equation.="|n|MAWP=\\min\\left[MAWP^C,MAWP^L\\right]=".$this->formatPressureResults($MAWP)."|n|";
+					$Equation.="|n|MAWP=\\min\\left[MAWP^C,MAWP^L\\right]=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 					
 				}	
 				$RSFa=0.9;
 				
-				$MAWP=min($this->RSF,$RSFa)/$RSFa*$MAWP;
-				$Equation.="|n|MAWP_r=MAWP\\frac{RSF}{RSF_a}=".$this->formatPressureResults($MAWP)."|n|";
+				$MAWP=min($this->RSFM,$RSFa)/$RSFa*$MAWP;
+				$Equation.="|n|MAWP_r=MAWP\\frac{RSF}{RSF_a}=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 			} else {
 				if($this->ShellType=="Toricone") {
 					$MAWP=min($MAWPC,$MAWPL,$MAWPK);
-					$Equation.="|n|MAWP=\\min\\left[MAWP^C,MAWP^L,MAWP^K\\right]=".$this->formatPressureResults($MAWP)."|n|";
+					$Equation.="|n|MAWP=\\min\\left[MAWP^C,MAWP^L,MAWP^K\\right]=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 					
 			 	} else {
 					$MAWP=min($MAWPC,$MAWPL);
-					$Equation.="|n|MAWP_r=\\min\\left[MAWP^C,MAWP^L\\right]=".$this->formatPressureResults($MAWP)."|n|";
+					$Equation.="|n|MAWP_r=\\min\\left[MAWP^C,MAWP^L\\right]=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 				}
 			}
 		}
@@ -250,26 +226,26 @@ class CodeCalculationsClass
 			if($tc<=0.365*$this->Radius) {
 				$Equation.="|n|t_{c}\\leq0.365R|n|";
 				$MAWP=$this->Stress*$this->WeldJointEfficiency*$tc/($this->Radius+0.6*$tc);
-				$Equation.="|n|MAWP$temp=\\frac{2SEt_c}{R+0.2t_c}=".$this->formatPressureResults($MAWP)."|n|";
+				$Equation.="|n|MAWP$temp=\\frac{2SEt_c}{R+0.2t_c}=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 			} else {
 				$Equation.="|n|t_{c}>0.365R|n|";
 				$temp1=pow(($this->Radius+$tc)/$this->Radius,3)-1;
 				$temp2=pow(($this->Radius+$tc)/$this->Radius,3)+2;
 				$MAWP=$this->Stress*$this->WeldJointEfficiency*($temp1)/$temp2;
-				$Equation.="MAWP$temp=SE\\left[\\left(\\frac{R+t_c}{R}\\right)^3-1\\right]\\left[\\left(\\frac{R+t_c}{R}\\right)^3-2\\right]^{-1}=".$this->formatPressureResults($MAWP)."|n|";
+				$Equation.="MAWP$temp=SE\\left[\\left(\\frac{R+t_c}{R}\\right)^3-1\\right]\\left[\\left(\\frac{R+t_c}{R}\\right)^3-2\\right]^{-1}=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 			}
 		} elseif($this->ShellType=="Ellipsoid") {
 			$MAWP=(2*$this->Stress*$this->WeldJointEfficiency*$tc)/($this->KEllipsoide*$this->Diameter+0.2*$tc);
-			$Equation.="MAWP=\\frac{2SEt_{c}}{KD+0.2t_{c}}=".$this->formatPressureResults($MAWP)."|n|";
+			$Equation.="MAWP=\\frac{2SEt_{c}}{KD+0.2t_{c}}=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 				
 		} elseif($this->ShellType=="Torisphere") {
 			$MAWP=(2*$this->Stress*$this->WeldJointEfficiency*$tc)/($this->M*$this->CrownRadius+0.2*$tc);
-			$Equation.="MAWP=\\frac{2SEt_c}{C_rM+0.2}=".$this->formatPressureResults($MAWP)."|n|";
+			$Equation.="MAWP=\\frac{2SEt_c}{C_rM+0.2}=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 		}
 		if(strrpos($this->AnalysisProcedure,"Local Thickness Area - LTA")>0&&$this->InputType!="Point Thickness Readings(PTR)") {
 			$RSFa=0.9;
 			$MAWP=min($this->RSF,$RSFa)/$RSFa*$MAWP;
-			$Equation.="MAWP_r=MAWP\\frac{RSF}{RSF_a}=".$this->formatPressureResults($MAWP)."|n|";
+			$Equation.="MAWP_r=MAWP\\frac{RSF}{RSF_a}=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 		}
 		
 		$MAWPL=-1;
@@ -473,14 +449,14 @@ class CodeCalculationsClass
 		}
 		if(strpos($this->AnalysisProcedure,"Local Thickness Area - LTA")>0&&$this->InputType!="Point Thickness Readings(PTR)") {
 			$MAWP=min($MAWPC,$MAWPL);
-			$Equation.="|n|MAWP=\\min\\left[MAWP^C,MAWP^L\\right]=".$this->formatPressureResults($MAWP)."|n|";
+			$Equation.="|n|MAWP=\\min\\left[MAWP^C,MAWP^L\\right]=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 			$RSFa=0.9;
 			$MAWP=min($this->RSF,$RSFa)/$RSFa*$MAWP;
 			$Equation.="RSF_a=$RSFa|n|";
-			$Equation.="|n|MAWP_r=MAWP\\frac{\\max\\left[RSF,RSA_a\\right]}{RSF_a}=".$this->formatPressureResults($MAWP)."|n|";
+			$Equation.="|n|MAWP_r=MAWP\\frac{\\max\\left[RSF,RSA_a\\right]}{RSF_a}=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 		} else {
 			$MAWP=min($MAWPC,$MAWPL);
-			$Equation.="|n|MAWP_r=\\min\\left[MAWP^C,MAWP^L\\right]=".$this->formatPressureResults($MAWP)."|n|";
+			$Equation.="|n|MAWP_r=\\min\\left[MAWP^C,MAWP^L\\right]=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 		}
 
 		$MAWP="";

@@ -34,5 +34,54 @@
 		}
 
 	}
+	function formatLengthResults($val,$LengthUnits) {
+		$buf="";
+		$buf.=round($val,4);
+		$buf.="\\ \\textup{".$LengthUnits."}";
+		return $buf;
+	}
+
+	function formatAreaResults($val,$LengthUnits) {
+		$buf="";
+		$buf.=round($val,4);
+		$buf.="\\ \\textup{".$LengthUnits."}^2";
+		return $buf;
+	}	
+	function formatPressureResults($val,$PressureUnits) {
+		$buf="";
+		if(strtoupper($PressureUnits)=="BAR") {
+			$val=$val/100000;
+		}
+		if(strtoupper($PressureUnits)=="MPA") {
+			$val=$val/1000000;
+		}
+		$buf.=round($val,4);
+		$buf.="\\ \\textup{".$PressureUnits."}";
+		return $buf;
+	}
 	
+	function formatAngleResults($val) {
+		$buf="";
+		$buf.=round($val,4);
+		$buf.="^\\circ";
+		return $buf;
+	}
+	function formatLengthResultsSquare($val,$LengthUnits) {
+		$buf="";
+		$buf.=round($val,4);
+		$buf.="\\ \\textup{".$LengthUnits."}^2";
+		return $buf;
+	}
+
+	function formatStressResults($val,$StressUnits) {
+		if(strtoupper($StressUnits)=="KSI") {
+			$val=$val/1000;
+		} elseif(strtoupper($StressUnits)=="MPA") {
+			$val=$val/1000000;
+		}
+		$buf="";
+		$buf.=round($val,4);
+		$buf.="\\ \\textup{".$StressUnits."}";
+		return $buf;
+	}
 ?>

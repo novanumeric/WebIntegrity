@@ -28,7 +28,6 @@ require "sharedCode.php";
 
 function performCTPIntegration($CTPInput,$tmm,$tmmposition,$Spacing,$L,&$A)
 {
-	//echo "tmmposition $tmmposition L $L\n";
 	$Count=1000;
 	$left=$tmmposition-$L/2;
 	$right=$tmmposition+$L/2;
@@ -66,8 +65,8 @@ function calculateCTP($CTPInput,&$CTPInputImg,&$tam,$tmm,$L,$Spacing,$Type,$Leng
 		$char="s";		
 	}
 	$N2=count($CTPInput);
-	$CTPInputImg="";
-	for($i=0;$i<=$N2;$i++) {  
+	$CTPInputImg="|n|t_{mm} \\textup{ is not found in dataset. Please confirm data}|n|";
+	for($i=0;$i<$N2;$i++) {  
 		if($CTPInput[$i]==$tmm) {
 			if(($i==0)|| ($i>=$N2-1)) {
 				$CTPInputImg="|n|{\\color{red}\\textup{Minimum thickness is on end}\\|n|}"; 	
@@ -77,8 +76,8 @@ function calculateCTP($CTPInput,&$CTPInputImg,&$tam,$tmm,$L,$Spacing,$Type,$Leng
 				if(($L/2)/$Spacing>1) {
 					$tmmposition=$i*$Spacing;
 					$tam=performCTPIntegration($CTPInput,$tmm,$tmmposition,$Spacing,$L,$A);
-					//TODO: Implement Numerical Integration
-					$CTPInputImg.="|n|\\frac{L}{2}>$delta\\ \\textup{ therefore a numerical integration technique is used.}|n|";
+
+					$CTPInputImg="|n|\\frac{L}{2}>$delta\\ \\textup{ therefore a numerical integration technique is used.}|n|";
 					$CTPInputImg.="A^".$char."=\int^{-L/2}_{L/2} t^".$char."\,d$char=".formatLengthResultsSquare($A,$LengthUnits)."\\ \\textup{0 is at }".formatLengthResults($tmmposition,$LengthUnits)." |n|";
 					$CTPInputImg.="{t^".$char."_{am}}=	\\frac{A}{L}=".formatLengthResults($tam,$LengthUnits)."}";
 				} else {
@@ -101,23 +100,10 @@ function calculateCTP($CTPInput,&$CTPInputImg,&$tam,$tmm,$L,$Spacing,$Type,$Leng
 }
 
 
-function formatLengthResults($val,$LengthUnits) {
-	$buf="";
-	$buf.=round($val,4);
-	$buf.="\\ \\textup{".$LengthUnits."}";
-	return $buf;
-}
-
-function formatLengthResultsSquare($val,$LengthUnits) {
-	$buf="";
-	$buf.=round($val,4);
-	$buf.="\\ \\textup{".$LengthUnits."}^2";
-	return $buf;
-}
 
 if($selectFlawDimensions=="Length") {
-	$CircumferentialSpacing=$CircumferentialLength/(count($CTPInputM)-1);
-	$LongitudinalSpacing=$LongitudinalLength/(count($CTPInputC)-1);
+	$CircumferentialSpacing=$CircumferentialLength/(count($CTPInputC)-1);
+	$LongitudinalSpacing=$LongitudinalLength/(count($CTPInputM)-1);
 }
 $ShellType=$_REQUEST["ShellType"];
 $RSFa=0.9;
