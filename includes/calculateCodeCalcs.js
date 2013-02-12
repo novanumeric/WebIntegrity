@@ -1,11 +1,11 @@
 function calculateCodeCalcs() {
 	$("#ResultsSpan").show();
 		
-		if($("#selectCriteria").val()=="Thickness") {
+		if($("#selectCriteria").val()=="Thickness"||$("#selectAnalysisProcedure").val().indexOf("Brittle Fracture")>0) {
 			$Calc="TMIN";
 		} else {
 			$Calc="PRESS";
-		}0
+		}
 
 
 		$.ajax(	{

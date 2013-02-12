@@ -4,10 +4,10 @@
 		$LengthCalc.="|n|{R_{ell}}=".$Ratio."|n|";
 		if($Location=="Other") {
 			$KEllipsoide=(1/6)*(2+$Ratio);
-			$LengthCalc.="|n|K=\\frac{1}{6}\\left(2%2BR_{ell}^2\\right)=\\ $KEllipsoide |n|";
+			$LengthCalc.="|n|K=\\frac{1}{6}\\left(2+R_{ell}^2\\right)=\\ $KEllipsoide |n|";
 		} else {
 			$KEllipsoide=0.25346+0.13995*$Ratio+0.12238*pow($Ratio,2)-0.015297*pow($Ratio,3);
-			$LengthCalc.="|n|K=0.25346%2B0.13955{R_{ell}}%2B0.12238{R_{ell}}^2|n|-0.015297{R_{ell}}^3=\\ $KEllipsoide |n|";
+			$LengthCalc.="|n|K=0.25346+0.13955{R_{ell}}+0.12238{R_{ell}}^2|n|-0.015297{R_{ell}}^3=\\ $KEllipsoide |n|";
 		}
 		return $KEllipsoide;
 	}
@@ -20,7 +20,7 @@
 	//	$LengthCalc.="|n|R=$Radius, r_k=$KnuckleRadius, angle=$Angle|n|";
 		$LengthCalc.="|n|L_{kc}=\\frac{R-r_k\\left(1-\\cos\\left[\\alpha\\right]\\right)}{\\cos\\left[\\alpha\\right]}=".round($Lkc,4)."|n|";
 		$M=0.25*(3.0+sqrt($Lkc/$KnuckleRadius));
-		$LengthCalc.="|n|M=\\frac{1}{4}\\left(3.0%2b\\sqrt{\\frac{L_{kc}}{r_k}}\\right)=".round($M,4);
+		$LengthCalc.="|n|M=\\frac{1}{4}\\left(3.0+\\sqrt{\\frac{L_{kc}}{r_k}}\\right)=".round($M,4);
 	}
 	
 	function calculateTorisphereParameters(&$LengthCalc,&$M,$Location,$InsideCrownRadius,$KnuckleRadius)
@@ -30,7 +30,7 @@
 			$LengthCalc.="|n|M=$M\\ \\textup{Center of Torispherical Head}|n|";
 		} else {
 			$M=0.25*(3.0+sqrt($InsideCrownRadius/$KnuckleRadius));
-			$LengthCalc.="|n|M=\\frac{1}{4}\\left(3.0%2b\\sqrt{\\frac{C_r}{r_k}}\\right)=$M";			
+			$LengthCalc.="|n|M=\\frac{1}{4}\\left(3.0+\\sqrt{\\frac{C_r}{r_k}}\\right)=$M";			
 		}
 
 	}

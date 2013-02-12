@@ -7,6 +7,7 @@ body {
 	font-size: 13px;
 	color: #061C37;
 	background-repeat:repeat-x;
+        background-color:#061C37;
 }
 
 a.side:link    {color:white;}

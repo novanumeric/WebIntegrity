@@ -36,7 +36,7 @@ $(function() {
 	$('#selectShellType').val(getParameterByName('selectShellType',"Sphere"));	
 	$('#GeneralMetalLossThickMethodType').val(getParameterByName('GeneralMetalLossThickMethodType',"Custom"));	
 	
-	$('#selectAnalysisProcedure').val(getParameterByName('selectAnalysisProcedure',"Part 4: General Metal Loss - GML"));
+	$('#selectAnalysisProcedure').val(getParameterByName('selectAnalysisProcedure',"Part 3: Brittle Fracture"));
 	$('#GeneralMetalLossThickMethodType').val(getParameterByName('GeneralMetalLossThickMethodType',"Calculate"));
 	$('#CalcsDiameter').val(getParameterByName('CalcsDiameter',30.0));
 	$('#selectUnits').val(getParameterByName('selectUnits','English'));
@@ -79,6 +79,7 @@ $(function() {
 		}
 
 	});
+
 	updateDisplay();
 	setupLinks();
 });

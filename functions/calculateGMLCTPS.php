@@ -87,11 +87,11 @@ function calculateCTP($CTPInput,&$CTPInputImg,&$tam,$tmm,$L,$Spacing,$Type,$Leng
 					$A2=($tmm+$t2)/2*(($L/2));			
 					$tam=($A1+$A2)/$L;
 					$CTPInputImg="|n|$delta=".formatLengthResults($Spacing,$LengthUnits)."|n|";
-					$CTPInputImg.="{t_{1}}=t_{mm}%2B\\left(t_{i-1}%2B{t_{mm}}\\right)\\frac{L/2}{$delta}=".formatLengthResults($t1,$LengthUnits)."}|n|";
-					$CTPInputImg.="{t_{2}}=t_{mm}%2B\\left(t_{i%2B1}%2B{t_{mm}}\\right)\\frac{L/2}{$delta}=". formatLengthResults($t2,$LengthUnits)."} |n|";
-					$CTPInputImg.="{A_{1}}=\\frac{{t_{1}}%2Bt_{mm}}{2}({L/2})=".formatLengthResults($A1,$LengthUnits)."}^2 |n|";
-					$CTPInputImg.="{A_{2}}=\\frac{{t_{mm}}%2Bt_{2}}{2}({L/2})=".formatLengthResults($A2,$LengthUnits)."}^2 |n|";
-					$CTPInputImg.="{t^".$char."_{am}}=\\frac{A_{1}%2BA_{2}}{L}=".formatLengthResults($tam,$LengthUnits)."}";
+					$CTPInputImg.="{t_{1}}=t_{mm}+\\left(t_{i-1}+{t_{mm}}\\right)\\frac{L/2}{$delta}=".formatLengthResults($t1,$LengthUnits)."}|n|";
+					$CTPInputImg.="{t_{2}}=t_{mm}+\\left(t_{i+1}+{t_{mm}}\\right)\\frac{L/2}{$delta}=". formatLengthResults($t2,$LengthUnits)."} |n|";
+					$CTPInputImg.="{A_{1}}=\\frac{{t_{1}}+t_{mm}}{2}({L/2})=".formatLengthResults($A1,$LengthUnits)."}^2 |n|";
+					$CTPInputImg.="{A_{2}}=\\frac{{t_{mm}}+t_{2}}{2}({L/2})=".formatLengthResults($A2,$LengthUnits)."}^2 |n|";
+					$CTPInputImg.="{t^".$char."_{am}}=\\frac{A_{1}+A_{2}}{L}=".formatLengthResults($tam,$LengthUnits)."}";
 				}
 				break;
 			}			

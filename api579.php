@@ -43,6 +43,7 @@
 <script src="includes/calculateGMLCTPS.js" type="text/javascript"></script>
 <script src="includes/calculateCodeCalcs.js" type="text/javascript"></script>
 <script src="includes/calculateLTACTPS.js" type="text/javascript"></script>
+<script src="includes/displayBrittle.js" type="text/javascript"></script>
 <script src="includes/displayResults.js" type="text/javascript"></script>
 <script src="includes/sharedJavascript.js" type="text/javascript"></script>
 <script src="includes/updateDisplay.js" type="text/javascript"></script>
@@ -65,15 +66,20 @@ Point Thickness Readings <span id="PTRInputDataSpanUnits"><br></span>
 <br>
 <div id="CTPInputSpan"  class="ui-widget-content" style="position:absolute;border-style:solid;left:510px;top:80px;border-color:black;border-width:1px;"><img id="CTPInputImg"  src=""></div>
 <div id="CTPInputCSpan" class="ui-widget-content" style="position:absolute;border-style:solid;left:10px;border-color:black;border-width:1px;white-space: nowrap;"> 
-<label for="CTPCDataC">CTP Circumferential Plane (C Projected): </label><br><textarea rows="3" cols=60 size=140 type="text" id="CTPInputC" ></textarea><br><img id="CTPInputCImg"  src="">
+<label for="CTPCDataC">CTP Longitudinal Plane (C Projected): </label><br><textarea rows="3" cols=60 size=140 type="text" id="CTPInputC" ></textarea><br><img id="CTPInputCImg"  src="">
 </div>
 
 <div id="CTPInputMSpan" class="ui-widget-content" style="position:absolute;border-style:solid;left:500px;border-color:black;border-width:1px;white-space: nowrap;"> 
-<label for="CTPMDataM">CTP Longitudinal Plane (M Projected): </label><br><textarea rows="3" cols=60 size=140 type="text" id="CTPInputM" ></textarea><br><img id="CTPInputMImg" src="">
+<label for="CTPMDataM">CTP Circumferential Plane (M Projected): </label><br><textarea rows="3" cols=60 size=140 type="text" id="CTPInputM" ></textarea><br><img id="CTPInputMImg" src="">
 </div>
 
 <? require "includes/ResultsSpan.php"; ?>
 
+<div id="BrittleResults" class="ui-widget-content" style="position:absolute;border-style:solid;left:510px;top:80px;border-color:black;border-width:1px;"> 
+
+<div id="GovThickness" style="height:250px; width:400px;"></div>
+<div id="TempReduction" style="height:250px; width:400px;"></div>
+</div>
 
 
 </BODY>

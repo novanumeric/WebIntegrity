@@ -35,7 +35,7 @@ function displayResults() {
 		}}).done(	function displayResultsFinal(data) {
 			if(data.GMLThicknessCalcResult!="") {
 				$("#GMLThicknessCalcResult").show();
-				$("#GMLThicknessCalcResult").attr("src","functions/render.php?equation=" + data.GMLThicknessCalcResult);			
+				$("#GMLThicknessCalcResult").attr("src","functions/render.php?equation=" + encodeURIComponent(data.GMLThicknessCalcResult));			
 			} else {
 				$("#GMLThicknessCalcResult").hide();
 			}
