@@ -103,16 +103,13 @@ function calculate(){
 	if($("#selectLevel").val()=="Level1") {
 		$("#PitDepthsLevel1").show();
 		$("#PitDepthsLevel2").hide();
+
 	} else {
 		$("#PitDepthsLevel1").hide();
 		$("#PitDepthsLevel2").show();
 	}
-	$PercentLoss=($("#CalcsDepth").val())/$("#CalcsUniformThickness").val();
-	if($PercentLoss>0.8) {
-		$("#depthMessage").html("Metal Loss exceed 80%, see ASME B31.G 1.2(f)");
-	} else {
-		$("#depthMessage").html("");
-	};
+	
+
 	$("#work").attr("src","");
 	$("#MAWP").html("#####");
 	$.getJSON('functions/calculateB31G.php', 

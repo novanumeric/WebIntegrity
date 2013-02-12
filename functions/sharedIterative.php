@@ -3,7 +3,9 @@ function calculateRSFIterative($CTPInput,$CTPInputLengths,&$CTPInputImg,$ShellTy
 	$CTPInputImg="";
 	$RSF=1.0;
 	$processed=Array();
+
 	$N=count($CTPInput);
+
 	for($Se=0;$Se<$N;$Se++) { 		
 		for($Ss=0;$Ss<$Se;$Ss++) {
 			$Ai=0;

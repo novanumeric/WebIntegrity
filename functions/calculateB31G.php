@@ -1,8 +1,7 @@
 <?
 
-$CTPInput=trim($_REQUEST["CTPInputM"]);
+$Depths=trim($_REQUEST["CTPInputM"]);
 $CTPInputLengths=trim($_REQUEST["CTPInputMLengths"]);
-
 $CalcsDiameter=$_REQUEST["CalcsDiameter"];
 $LengthUnits=$_REQUEST["LengthUnits"];
 $PressureUnits=$_REQUEST["PressureUnits"];
@@ -23,6 +22,7 @@ require "sharedIterative.php";
 $Equation="|n|";
 if($selectLevel=="Level1") {
 	$RSF=1;
+	$PercentLoss=$CalcsDepth/$CalcsUniformThickness;
 	$Equation.="\\textup{Level 1 Calculations}|n|";
 	$z=pow($CalcsLength,2.0)/($CalcsDiameter*$CalcsUniformThickness);
 	//$z=pow(210,2)/609/11.3;
@@ -57,14 +57,25 @@ if($selectLevel=="Level1") {
 
 	}
 } else {
-	$Equation.="\\textup{Level 2 Calculations}|n|"; 
-	$CTPInput=preg_split("/[\s,]+/",$CTPInput);
+	$CTPInput=Array();
+	$Depths=preg_replace("/[\n]/", " ",$Depths);
+	$CTPInputLengths=preg_replace("/\n/", " ",$CTPInputLengths);
+	$Depths=preg_split("/[\s,]+/",$Depths);
 	$CTPInputLengths=preg_split("/[\s,]+/",$CTPInputLengths);
+
+	
+	$Equation.="\\textup{Level 2 Calculations}|n|"; 	
 	$EquationBuf="";
-	for($i=0;$i<count($CTPInput);$i++) {
-		$CTPInput[$i]=$CalcsUniformThickness-$CTPInput[$i];
+	$temp="";
+	$PercentLoss=0;
+	for($i=0;$i<count($Depths);$i++) {
+		$CTPInput[$i]=$CalcsUniformThickness-$Depths[$i];
+		$PercentLoss=max($Depths[$i]/$CalcsUniformThickness,$PercentLoss);
+
 	}
+
 	$RSF=calculateRSFIterative($CTPInput,$CTPInputLengths,&$EquationBuf,$ShellType,$CalcsDiameter,$CalcsUniformThickness,$LengthUnits);
+	
 	$Equation.=$EquationBuf;
 }
 if(strtoupper($StressUnits)=="KSI") {
@@ -74,12 +85,14 @@ if(strtoupper($StressUnits)=="KSI") {
 }
 $Sf=$RSF*$Sflow;
 
+if($PercentLoss>0.8) {
+	$Equation.="|n| {\\color{Red}\\textup{Metal Loss ".round($PercentLoss*100,2)."\% exceed 80\%}}|n|{\\color{Red}\\textup{ See ASME B31.G 1.2(f)} }|n|";
+};
 $Equation.="S_f=RSF\\times S_{flow}=".formatStressResults($Sf,$StressUnits)."|n|";
 
 $PCalc=$Sf*2*$CalcsUniformThickness/$CalcsDiameter;
 $Equation.="P=\\frac{S_f\\times2t}{D}=".formatPressureResults($PCalc,$PressureUnits)."|n| ";
 
-//print json.dumps({'Sf': Sf,'Equation':Equation,'MAWP':MAWP}, sort_keys=True, indent=4);
 $details=array('Equation'=>$Equation,'RSF'=>$RSF);
 echo json_encode($details);
 ?>
