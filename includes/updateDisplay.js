@@ -287,86 +287,107 @@ function updateDisplay() {
 	
 
 
-	
-	if($("#selectInputType").val()=="Critical Thickness Profile(CTP)" || $("#selectInputType").val()=="Thickness Grid(GRID)") {
+	if($("#selectAnalysisProcedure").val().indexOf("Brittle Fracture")>0) {
+		$("#BrittleResults").show();
 		$("#PTRInputDataSpan").hide();
-		$("#SpanAnalysisProcedure").show();
-		$("#selectAnalysisProcedure").show();
-		$(".FlawDimensions").show();
-		$("#CalcsUniformLoss").removeAttr("disabled");
-		
-		if($("#selectFlawDimensions").val()=="Spacing") {
-			$(".FlawDimensionsSpacing").show();
-			$(".FlawDimensionsLength").hide(); 
-		} else {
-			$(".FlawDimensionsSpacing").hide();		
-			$(".FlawDimensionsLength").show();
-		}
-		if($("#selectAnalysisProcedure").val().indexOf("General Metal Loss - GML")>0) {
-			if($("#selectInputType").val()=="Thickness Grid(GRID)") {
-				$("#CTPInputM").attr("disabled", "disabled"); 
-				$("#CTPInputC").attr("disabled", "disabled");
-				$("#GridDataSpan").show();
-				$("#CTPInputSpan").show();
-				$("#CTPInputCSpan").show();
-				$("#CTPInputMSpan").show();
-				calculateCTPS();
-				calculateGMLCTPS(); 
-				calculateCodeCalcs();
-				displayResults();
-			} else {
-
-				$("#CTPInputM").removeAttr("disabled"); 
-				$("#CTPInputC").removeAttr("disabled");
-				$("#GridDataSpan").hide();
-				$("#CTPInputSpan").hide();
-				$("#CTPInputCSpan").show();
-				$("#CTPInputMSpan").show();
-				calculateGMLCTPS();
-				calculateCodeCalcs();
-				displayResults();
-			}		
-		} else { //LTA
-			if($("#selectInputType").val()=="Thickness Grid(GRID)") {
-				$("#CTPInputM").attr("disabled", "disabled"); 
-				$("#CTPInputC").attr("disabled", "disabled");
-				$("#GridDataSpan").show();
-				$("#CTPInputSpan").show();
-				calculateCTPS();
-				calculateLTACTPS();
-				calculateCodeCalcs();
-				displayResults();
-			} else {
-				$("#CTPInputM").removeAttr("disabled"); 
-				$("#CTPInputC").removeAttr("disabled");
-				$("#GridDataSpan").hide();
-				$("#CTPInputSpan").show();
-				$("#CTPInputCSpan").show();
-				$("#CTPInputMSpan").show();
-				calculateLTACTPS();
-				calculateCodeCalcs();
-				displayResults();
-
-			}				
-		}
-		
-	} else if($("#selectInputType").val()=="Point Thickness Readings(PTR)") {
+		$(".FlawDimensionsLength").hide();
+		$(".FlawDimensionsSpacing").hide();	
+		$("#FlawDimensionsRow").hide();
+		$("#FFSCriteriaType").hide();
+		$("#InputTypeRow").hide();
 		$("#CTPInputSpan").hide();
 		$("#CTPInputMSpan").hide();
 		$("#CTPInputCSpan").hide();
-		$("#CalcsUniformLoss").attr("disabled", "disabled");
-		
 		$("#GridDataSpan").hide();
-		$(".FlawDimensions").hide();
-		$("#SpanAnalysisProcedure").hide();
-		$("#CalcsSpacingRow").hide();
-		$("#PTRInputDataSpan").show();
-		$("#minThicknessSpan").show();
-		calculateCOV();
+
+
 		calculateCodeCalcs();
 		displayResults();
+		displayBrittle();
+		
+	} else {
+		$("#BrittleResults").hide();
+		$("#FlawDimensionsRow").show();
+		$("#InputTypeRow").show();
+		if($("#selectInputType").val()=="Critical Thickness Profile(CTP)" || $("#selectInputType").val()=="Thickness Grid(GRID)") {
+			$("#PTRInputDataSpan").hide();
+			$("#SpanAnalysisProcedure").show();
+			$("#selectAnalysisProcedure").show();
+			$(".FlawDimensions").show();
+			$("#CalcsUniformLoss").removeAttr("disabled");
+			
+			if($("#selectFlawDimensions").val()=="Spacing") {
+				$(".FlawDimensionsSpacing").show();
+				$(".FlawDimensionsLength").hide(); 
+			} else {
+				$(".FlawDimensionsSpacing").hide();		
+				$(".FlawDimensionsLength").show();
+			}
+			if($("#selectAnalysisProcedure").val().indexOf("General Metal Loss - GML")>0) {
+				if($("#selectInputType").val()=="Thickness Grid(GRID)") {
+					$("#CTPInputM").attr("disabled", "disabled"); 
+					$("#CTPInputC").attr("disabled", "disabled");
+					$("#GridDataSpan").show();
+					$("#CTPInputSpan").show();
+					$("#CTPInputCSpan").show();
+					$("#CTPInputMSpan").show();
+					calculateCTPS();
+					calculateGMLCTPS(); 
+					calculateCodeCalcs();
+					displayResults();
+				} else {
+
+					$("#CTPInputM").removeAttr("disabled"); 
+					$("#CTPInputC").removeAttr("disabled");
+					$("#GridDataSpan").hide();
+					$("#CTPInputSpan").hide();
+					$("#CTPInputCSpan").show();
+					$("#CTPInputMSpan").show();
+					calculateGMLCTPS();
+					calculateCodeCalcs();
+					displayResults();
+				}		
+			} else { //LTA
+				if($("#selectInputType").val()=="Thickness Grid(GRID)") {
+					$("#CTPInputM").attr("disabled", "disabled"); 
+					$("#CTPInputC").attr("disabled", "disabled");
+					$("#GridDataSpan").show();
+					$("#CTPInputSpan").show();
+					calculateCTPS();
+					calculateLTACTPS();
+					calculateCodeCalcs();
+					displayResults();
+				} else {
+					$("#CTPInputM").removeAttr("disabled"); 
+					$("#CTPInputC").removeAttr("disabled");
+					$("#GridDataSpan").hide();
+					$("#CTPInputSpan").show();
+					$("#CTPInputCSpan").show();
+					$("#CTPInputMSpan").show();
+					calculateLTACTPS();
+					calculateCodeCalcs();
+					displayResults();
+
+				}				
+			}
+			
+		} else if($("#selectInputType").val()=="Point Thickness Readings(PTR)") {
+			$("#CTPInputSpan").hide();
+			$("#CTPInputMSpan").hide();
+			$("#CTPInputCSpan").hide();
+			$("#CalcsUniformLoss").attr("disabled", "disabled");
+			
+			$("#GridDataSpan").hide();
+			$(".FlawDimensions").hide();
+			$("#SpanAnalysisProcedure").hide();
+			$("#CalcsSpacingRow").hide();
+			$("#PTRInputDataSpan").show();
+			$("#minThicknessSpan").show();
+			calculateCOV();
+			calculateCodeCalcs();
+			displayResults();
+		}
 	}
-	
 	
 	DisableEvents=false;
 }

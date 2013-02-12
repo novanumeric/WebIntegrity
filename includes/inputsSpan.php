@@ -50,7 +50,7 @@ Units: <select id="selectUnits" class="updateDisplay"><option>Metric-MPa<option>
 </table><br>
 <table style="border-style:solid;border-color:black;width:400px;border-width:1px;"  class="ui-widget-content">
 <tr><td  style="color:blue"><b>Analysis Options:</b></td></tr>
-<tr><td colspan=2 id="SpanAnalysisProcedure">Procedure: <select class="updateDisplay" id="selectAnalysisProcedure"><!--<option>Part 3: Brittle Fracture--><option selected>Part 4: General Metal Loss - GML<option>Part 5: Local Thickness Area - LTA</select></td></tr>
+<tr><td colspan=2 id="SpanAnalysisProcedure">Procedure: <select class="updateDisplay" id="selectAnalysisProcedure"><option selected>Part 3: Brittle Fracture<option>Part 4: General Metal Loss - GML<option>Part 5: Local Thickness Area - LTA</select></td></tr>
 
 <tr>
     <td style="width:150px">FFS Level: <select id="selectFFSLevel" class="updateDisplay"><option>Level 1<option>Level 2</select></td>
@@ -65,9 +65,9 @@ Units: <select id="selectUnits" class="updateDisplay"><option>Metric-MPa<option>
 
 <tr><td colspan=2 class="CalcsInputs" id="CalcsAllowableStressRow"      ><span class="WithHints" title="Allowable Stress"          >Allowable Stress(S):</span>                           <input class="updateDisplay" id="CalcsAllowableStress" size=5 type="text" value="20">                 <span class="StressUnits"></span></td></tr>
 
-<tr><td  colspan=2 ><span class="WithHints" title="Select Thickness Reading Form"> Input Type:</span> <select class="updateDisplay" id="selectInputType"><option>Critical Thickness Profile(CTP)<option>Thickness Grid(GRID)<option>Point Thickness Readings(PTR)</select></td></tr>
+<tr><td  colspan=2 id="InputTypeRow"><span class="WithHints" title="Select Thickness Reading Form"> Input Type:</span> <select class="updateDisplay" id="selectInputType"><option>Critical Thickness Profile(CTP)<option>Thickness Grid(GRID)<option>Point Thickness Readings(PTR)</select></td></tr>
 
-<tr><td  colspan=2 class="FlawDimensions" id="CalcsFlawDimensions"><span class="WithHints" title="Spacing"      >Flaw Dimensions Input:</span>    <select id="selectFlawDimensions" class="updateDisplay"><option>Spacing<option>Length</select></td></tr>
+<tr><td  colspan=2 class="FlawDimensions" id="FlawDimensionsRow" id="CalcsFlawDimensions"><span class="WithHints" title="Spacing"      >Flaw Dimensions Input:</span>    <select id="selectFlawDimensions" class="updateDisplay"><option>Spacing<option>Length</select></td></tr>
 <tr><td  colspan=2 class="FlawDimensions FlawDimensionsLength" id="CircumferentialLengthRow"><span class="WithHints" title="Spacing"      >Circumferential Length (C):</span>    <input class="updateDisplay" id="CircumferentialLength" size=5 type="text" value="1.5" size=5>       <span class="LengthUnits"></span></td></tr>
 <tr><td  colspan=2 class="FlawDimensions FlawDimensionsLength" id="LongitudinalLengthRow"><span class="WithHints" title="Spacing"      >Longitudinal Length (S):</span>    <input class="updateDisplay" id="LongitudinalLength" size=5 type="text" value="1.5" size=5>       <span class="LengthUnits"></span></td></tr>
 <tr><td  colspan=2 class="FlawDimensions FlawDimensionsSpacing" id="CircumferentialSpacingRow"><span class="WithHints" title="Spacing"      >Circumferential Spacing (&Delta;M):</span>    <input class="updateDisplay" id="CircumferentialSpacing" size=5 type="text" value="1.5" size=5>       <span class="LengthUnits"></span></td></tr>

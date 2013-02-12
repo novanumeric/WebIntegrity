@@ -43,6 +43,7 @@
 <script src="includes/calculateGMLCTPS.js" type="text/javascript"></script>
 <script src="includes/calculateCodeCalcs.js" type="text/javascript"></script>
 <script src="includes/calculateLTACTPS.js" type="text/javascript"></script>
+<script src="includes/displayBrittle.js" type="text/javascript"></script>
 <script src="includes/displayResults.js" type="text/javascript"></script>
 <script src="includes/sharedJavascript.js" type="text/javascript"></script>
 <script src="includes/updateDisplay.js" type="text/javascript"></script>
@@ -74,6 +75,11 @@ Point Thickness Readings <span id="PTRInputDataSpanUnits"><br></span>
 
 <? require "includes/ResultsSpan.php"; ?>
 
+<div id="BrittleResults" class="ui-widget-content" style="position:absolute;border-style:solid;left:510px;top:80px;border-color:black;border-width:1px;"> 
+
+<div id="GovThickness" style="height:250px; width:400px;"></div>
+<div id="TempReduction" style="height:250px; width:400px;"></div>
+</div>
 
 
 </BODY>
