@@ -29,9 +29,10 @@ function calculateLTACTPS() {
 	
 	}}).done( 	
 			function calculateLTACTPS(data) {
-				$("#CTPInputImg").attr("src","functions/render.php?equation="+data.CTPInputImg);
-				$("#CTPInputMImg").attr("src","functions/render.php?equation="+data.CTPInputMImg);
-				$("#CTPInputCImg").attr("src","functions/render.php?equation="+data.CTPInputCImg);
+				//alert(encodeURIComponent(data.CTPInputImg));
+				$("#CTPInputImg").attr("src","functions/render.php?equation="+encodeURIComponent(data.CTPInputImg));
+				$("#CTPInputMImg").attr("src","functions/render.php?equation="+encodeURIComponent(data.CTPInputMImg));
+				$("#CTPInputCImg").attr("src","functions/render.php?equation="+encodeURIComponent(data.CTPInputCImg));
 				window.RSFC=data.RSFC;
 				window.RSFM=data.RSFM;
 				window.RSF=data.RSF;

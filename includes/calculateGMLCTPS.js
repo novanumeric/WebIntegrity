@@ -30,9 +30,9 @@ function calculateGMLCTPS() {
 				window.KEllipsoide=data.KEllipsoide;
 				window.M=data.M;
 				window.Lkc=data.Lkc;
-				$("#CTPInputImg").attr("src","functions/render.php?equation="+data.CTPInputImg);
-				$("#CTPInputMImg").attr("src","functions/render.php?equation="+data.CTPInputMImg);
-				$("#CTPInputCImg").attr("src","functions/render.php?equation="+data.CTPInputCImg);
+				$("#CTPInputImg").attr("src","functions/render.php?equation="+encodeURIComponent(data.CTPInputImg));
+				$("#CTPInputMImg").attr("src","functions/render.php?equation="+encodeURIComponent(data.CTPInputMImg));
+				$("#CTPInputCImg").attr("src","functions/render.php?equation="+encodeURIComponent(data.CTPInputCImg));
 			}	
 	);	
 }

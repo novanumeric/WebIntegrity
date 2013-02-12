@@ -48,52 +48,52 @@ if($CTPInputM!=""&&$CTPInputC!="") {
 	$CTPInputC=preg_split("/[\s,]+/",$CTPInputC);
 	$CTPInputM=preg_split("/[\s,]+/",$CTPInputM);
 	$tmm=min(min($CTPInputM),min($CTPInputC));
-	$N1=count($CTPInputC);
-	$N2=count($CTPInputM);
+	$NC=count($CTPInputC);
+	$NM=count($CTPInputM);
 } elseif($CTPInputM!="") {
 	$CTPInputM=preg_split("/[\s,]+/",$CTPInputM);
 	$tmm=min($CTPInputM);
-	$N1=0;
-	$N2=count($CTPInputM);
+	$NC=0;
+	$NM=count($CTPInputM);
 } elseif($CTPInputC!="") {
 	$CTPInputC=preg_split("/[\s,]+/",$CTPInputC);
 	$tmm=min($CTPInputC);
-	$N1=count($CTPInputC);
-	$N2=0;
+	$NC=count($CTPInputC);
+	$NM=0;
 } else {
 	$tmm=0;
-	$N1=0;
-	$N2=0;
+	$NC=0;
+	$NM=0;
 }
 if($selectFlawDimensions=="Length") {
-	if(count($CTPInputM)==1) {
+	if(count($CTPInputC)==1) {
 		$LongitudinalSpacing=$LongitudinalLength;
 	} else {
-		$LongitudinalSpacing=$LongitudinalLength/(count($CTPInputM)-1);
+		$LongitudinalSpacing=$LongitudinalLength/(count($CTPInputC)-1);
 	}
-	if(count($CTPInputC)==1) {
+	if(count($CTPInputM)==1) {
 		$CircumferentialSpacing=$CircumferentialLength;
 	} else {
-		$CircumferentialSpacing=$CircumferentialLength/(count($CTPInputC)-1);
+		$CircumferentialSpacing=$CircumferentialLength/(count($CTPInputM)-1);
 	}
 } elseif($selectFlawDimensions=="Spacing") {
-	$LongitudinalLength=$LongitudinalSpacing*(count($CTPInputM)-1);
-	$CircumferentialLength=$CircumferentialSpacing*(count($CTPInputC)-1);
+	$LongitudinalLength=$LongitudinalSpacing*(count($CTPInputC)-1);
+	$CircumferentialLength=$CircumferentialSpacing*(count($CTPInputM)-1);
 }
 
 if($selectFlawDimensions=="Length"||$selectFlawDimensions=="Spacing") {
-	for($Se=0;$Se<$N2;$Se++) { 		
-		$CTPInputMLengths[$Se]=$LongitudinalSpacing*$Se;
+	for($Se=0;$Se<$NC;$Se++) { 		
+		$CTPInputCLengths[$Se]=$LongitudinalSpacing*$Se;
 	}
 
 } else {
-	$CTPInputMLengths=$_REQUEST["CTPInputMLengths"];
-	$CTPInputMLengths=preg_split("/[\s,]+/",$CTPInputMLengths);
+	$CTPInputCLengths=$_REQUEST["CTPInputCLengths"];
+	$CTPInputCLengths=preg_split("/[\s,]+/",$CTPInputCLengths);
 }
 
 $CTPInputImg="|n|\\textup{Calculating LTA} |n|";
 
-$CTPInputImg.="D=D%2b2FCA%2b2LOSS=".formatLengthResults($Diameter+2*$FCA+2*$UniformLoss,$LengthUnits)."|n|";
+$CTPInputImg.="D=D+FCA+LOSS=".formatLengthResults($Diameter+2*$FCA+2*$UniformLoss,$LengthUnits)."|n|";
 $CTPInputImg.="t_{c}={t_{nom}-FCA-LOSS}=".formatLengthResults($tc,$LengthUnits)."|n|";
 
 if($LengthUnits=="mm") {
@@ -155,21 +155,20 @@ if($FFSLevel=="Level 1") {
 	} else {
 
 
-		if($N2<=1) {
+		if($NC<=1) {
 			$RSFM="-1";
-			$CTPInputMImg="\\textup{Insufficient data points}";
-		} else {
-			$CTPInputMImg="";
-			$RSFM=calculateRSFIterative($CTPInputM,$CTPInputMLengths,$CTPInputMImg,$ShellType,$Diameter,$tc,$LengthUnits);
-	//		$CTPInputMImg="|n|\\Delta S=".formatLengthResults($LongitudinalSpacing,$LengthUnits).$CTPInputMImg;
-		}
-
-		if($N1<1) {
-			$RSFC="-1";
 			$CTPInputCImg="\\textup{Insufficient data points}";
 		} else {
-			$CTPInputCImg="\\textup{No calculations}|n|";
-			CircumferentialCheck($RSFC,$Rt,$RSFM,$CircumferentialLength,$LengthUnits,$Diameter,$FCA,$tc,&$CTPInputImg);
+			$CTPInputCImg="";
+			$RSFM=calculateRSFIterative($CTPInputC,$CTPInputCLengths,$CTPInputCImg,$ShellType,$Diameter,$tc,$LengthUnits);
+		}
+
+		if($NM<1) {
+			$RSFC="-1";
+			$CTPInputMImg="\\textup{Insufficient data points}";
+		} else {
+			$CTPInputMImg="\\textup{No calculations}|n|";
+			CircumferentialCheck($RSFC,$Rt,$RSFM,$LongitudinalLength,$LengthUnits,$Diameter,$FCA,$tc,&$CTPInputImg);
 		}
 		
 	}
@@ -294,18 +293,18 @@ function calculateRTMinFrmTSF($TSF,$lambdaC){
 		return($Rt);
 	}
 }
-function CircumferentialCheck(&$RSFC,$Rt,$RSF,$CircumferentialLength,$LengthUnits,$Diameter,$FCA,$tc,&$CTPInputImg) {
+function CircumferentialCheck(&$RSFC,$Rt,$RSF,$LongitudinalLength,$LengthUnits,$Diameter,$FCA,$tc,&$CTPInputImg) {
 		$CTPInputImg.="|n|\\textup{Checking Circumferential Plane} |n|";
-		$CTPInputImg.="c=".formatLengthResults($CircumferentialLength,$LengthUnits)."|n|";
-		$lambdaC=1.285*$CircumferentialLength/sqrt(($Diameter+2*$FCA)*$tc);
-		$CTPInputImg.="\\lambda_C=\\frac{1.285c}{\\sqrt{Dt_c}}=".round($lambdaC,4)."|n|";
+		$CTPInputImg.="c=".formatLengthResults($LongitudinalLength,$LengthUnits)."|n|";
+		$lambdal=1.285*$LongitudinalLength/sqrt(($Diameter+2*$FCA)*$tc);
+		$CTPInputImg.="\\lambda_c=\\frac{1.285c}{\\sqrt{Dt_c}}=".round($lambdal,4)."|n|";
 		$EL=1;
 		$EC=1;
 
 		$temp=sqrt(4-3*pow($EL,2));
 		$TSF=$EC/(2*$RSF)*(1+$temp/$EL);
-		$CTPInputImg.="TSF=\\frac{E_c}{2\\times\\ RSF}\\left(1%2b\\frac{\\sqrt{4-3E^2_L}}{E_L}\\right)=".round($TSF,4)."|n|";
-		$Rtmin=calculateRTMinFrmTSF($TSF,$lambdaC);
+		$CTPInputImg.="TSF=\\frac{E_c}{2\\times\\ RSF}\\left(1+\\frac{\\sqrt{4-3E^2_L}}{E_L}\\right)=".round($TSF,4)."|n|";
+		$Rtmin=calculateRTMinFrmTSF($TSF,$lambdal);
 		$CTPInputImg.="R_{tmin}=".round($Rtmin,4)."\\ \\textup{See Figure 5.8} |n|";
 		if($Rt<$Rtmin) {
 			$RSFC=0;
