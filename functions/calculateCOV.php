@@ -11,13 +11,6 @@ if($N<15) {
 	$Warning="A minimum of 15 thickness readings is recommended API 579 4.3.3.2. ";
 }
 
-function formatLengthResults($val,$LengthUnits) {
-	$buf="";
-	$buf.=round($val,4);
-	$buf.="\\ \\textup{".$LengthUnits."}";
-	return $buf;
-}
-
 $tam=array_sum($PTRInputData) / $N;
 $S=0;
 for($i=0;$i<$N;$i++) {
@@ -42,5 +35,12 @@ $Equation.="{t_{mm}}=".formatLengthResults($tmm,$LengthUnits).",\\ {t_a_m}=".for
 $Equation.="LOSS={t_{nom}}-{t_{am}}=".formatLengthResults($Loss,$LengthUnits)."|n|";
 $details=array('tam'=>$tam,'tmm'=>$tmm,'Loss'=>$Loss,'COV' => $COV,'Equation' => $Equation,'Warning'=>$Warning);
 echo json_encode($details);
+
+function formatLengthResults($val,$LengthUnits) {
+	$buf="";
+	$buf.=round($val,4);
+	$buf.="\\ \\textup{".$LengthUnits."}";
+	return $buf;
+}
 
 ?>
