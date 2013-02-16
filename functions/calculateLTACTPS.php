@@ -30,18 +30,6 @@ $Lkc="";
 require "sharedCode.php";
 require "sharedIterative.php";
 
-
-function calculateRSF($Rt,$Mt,&$CTPInputImg) {
-
-	$RSF=$Rt/(1-(1/$Mt)*(1-$Rt));
-	$CTPInputImg.="RSF=\\frac{R_t}{1-\\frac{1}{M_t}\\left(1-R_t\\right)}=".round($RSF,4)."|n|";
-	return $RSF;
-}
-
-
-
-
-
 $tc=($tnom-$FCA-$UniformLoss);
 if($CTPInputM!=""&&$CTPInputC!="") {
 	
@@ -293,26 +281,32 @@ function calculateRTMinFrmTSF($TSF,$lambdaC){
 		return($Rt);
 	}
 }
-function CircumferentialCheck(&$RSFC,$Rt,$RSF,$LongitudinalLength,$LengthUnits,$Diameter,$FCA,$tc,&$CTPInputImg) {
-		$CTPInputImg.="|n|\\textup{Checking Circumferential Plane} |n|";
-		$CTPInputImg.="c=".formatLengthResults($LongitudinalLength,$LengthUnits)."|n|";
-		$lambdal=1.285*$LongitudinalLength/sqrt(($Diameter+2*$FCA)*$tc);
-		$CTPInputImg.="\\lambda_c=\\frac{1.285c}{\\sqrt{Dt_c}}=".round($lambdal,4)."|n|";
-		$EL=1;
-		$EC=1;
 
-		$temp=sqrt(4-3*pow($EL,2));
-		$TSF=$EC/(2*$RSF)*(1+$temp/$EL);
-		$CTPInputImg.="TSF=\\frac{E_c}{2\\times\\ RSF}\\left(1+\\frac{\\sqrt{4-3E^2_L}}{E_L}\\right)=".round($TSF,4)."|n|";
-		$Rtmin=calculateRTMinFrmTSF($TSF,$lambdal);
-		$CTPInputImg.="R_{tmin}=".round($Rtmin,4)."\\ \\textup{See Figure 5.8} |n|";
-		if($Rt<$Rtmin) {
-			$RSFC=0;
-			$CTPInputImg.="{\\color{red}R_{t}< R_{tmin}} |n|";
-		}else {
-			$RSFC=1;
-			$CTPInputImg.="R_{t}\\geq R_{tmin} |n|";
-		}
+function CircumferentialCheck(&$RSFC,$Rt,$RSF,$LongitudinalLength,$LengthUnits,$Diameter,$FCA,$tc,&$CTPInputImg) {
+	$CTPInputImg.="|n|\\textup{Checking Circumferential Plane} |n|";
+	$CTPInputImg.="c=".formatLengthResults($LongitudinalLength,$LengthUnits)."|n|";
+	$lambdal=1.285*$LongitudinalLength/sqrt(($Diameter+2*$FCA)*$tc);
+	$CTPInputImg.="\\lambda_c=\\frac{1.285c}{\\sqrt{Dt_c}}=".round($lambdal,4)."|n|";
+	$EL=1;
+	$EC=1;
+	$temp=sqrt(4-3*pow($EL,2));
+	$TSF=$EC/(2*$RSF)*(1+$temp/$EL);
+	$CTPInputImg.="TSF=\\frac{E_c}{2\\times\\ RSF}\\left(1+\\frac{\\sqrt{4-3E^2_L}}{E_L}\\right)=".round($TSF,4)."|n|";
+	$Rtmin=calculateRTMinFrmTSF($TSF,$lambdal);
+	$CTPInputImg.="R_{tmin}=".round($Rtmin,4)."\\ \\textup{See Figure 5.8} |n|";
+	if($Rt<$Rtmin) {
+		$RSFC=0;
+		$CTPInputImg.="{\\color{red}R_{t}< R_{tmin}} |n|";
+	}else {
+		$RSFC=1;
+		$CTPInputImg.="R_{t}\\geq R_{tmin} |n|";
+	}
+}
+
+function calculateRSF($Rt,$Mt,&$CTPInputImg) {
+	$RSF=$Rt/(1-(1/$Mt)*(1-$Rt));
+	$CTPInputImg.="RSF=\\frac{R_t}{1-\\frac{1}{M_t}\\left(1-R_t\\right)}=".round($RSF,4)."|n|";
+	return $RSF;
 }
 
 
