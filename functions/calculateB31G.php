@@ -16,7 +16,7 @@ $selectMethod=$_REQUEST["selectMethod"];
 
 $CalcsUniformThickness=$_REQUEST["CalcsUniformThickness"];
 $ShellType="RSTRENG";
-$Equation="";
+
 require "sharedCode.php";
 require "sharedIterative.php";
 $Equation="|n|";
@@ -25,7 +25,7 @@ if($selectLevel=="Level1") {
 	$PercentLoss=$CalcsDepth/$CalcsUniformThickness;
 	$Equation.="\\textup{Level 1 Calculations}|n|";
 	$z=pow($CalcsLength,2.0)/($CalcsDiameter*$CalcsUniformThickness);
-	//$z=pow(210,2)/609/11.3;
+
 	$Equation.="z=\\frac{L^2}{Dt}=".round($z,4)."|n|";
 	if($selectMethod=='Original'){
 		$M=sqrt(1.0 + 0.8*$z);
