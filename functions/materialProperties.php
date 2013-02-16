@@ -144,8 +144,20 @@ if($RequestType=="AllowableStress") {
 	$TemperatureUnits=$_REQUEST["TemperatureUnits"];
 	$StressUnits=$_REQUEST["StressUnits"];
 	$MaterialID=$_REQUEST["MaterialID"];
-	$Temperature=$_REQUEST["Temperature"];
+	$AnalysisProcedure=$_REQUEST["AnalysisProcedure"];
+	
+	if(stripos($AnalysisProcedure,"Brittle Fracture")===false) {
+		$Temperature=$_REQUEST["Temperature"];
+		//echo "Not Brittle";
+	} else {
+		//echo "Brittle";
+		if($TemperatureUnits=="C") {
+			$Temperature=(100-32)/1.8;		
+		} else {
+			$Temperature="100";
+		}
 
+	}
 	if($TemperatureUnits=="C") {
 		$Temperature=$Temperature*1.8+32;
 	}

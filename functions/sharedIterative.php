@@ -44,7 +44,12 @@ function calculateRSFIterative($CTPInput,$CTPInputLengths,&$CTPInputImg,$ShellTy
 						$RSF=$RSFCurrent;
 						$CTPInputImg="|n|S_s=".$Ss."\\ S_e=".$Se."\\ \\|n|";
 						$CTPInputImg.="S_{sl}=".formatLengthResults($CTPInputLengths[$Ss],$LengthUnits)."\\ S_{el}=".formatLengthResults($CTPInputLengths[$Se],$LengthUnits)."\\ \\|n|";
-						$CTPInputImg.="{A^i}=\int^{S_{el}}_{S_{sl}} LOSS\,ds=".formatAreaResults($Ai,$LengthUnits). "|n|\\ {A^i_0}=\\left(S_{el}-S_{sl}\\right)\\times{t_c}=".formatAreaResults($Ai0,$LengthUnits). "|n|";
+						if(strtoupper($ShellType)=="RSTRENG") {
+							$temp2="";
+						} else {
+							$temp2="_c";
+						}
+						$CTPInputImg.="{A^i}=\int^{S_{el}}_{S_{sl}} LOSS\,ds=".formatAreaResults($Ai,$LengthUnits). "|n|\\ {A^i_0}=\\left(S_{el}-S_{sl}\\right)\\times{t$temp2}=".formatAreaResults($Ai0,$LengthUnits). "|n|";
 						if(strtoupper($ShellType)=="RSTRENG") {
 							$CTPInputImg.="z=\\frac{L^2}{Dt}=".round($z,4)."|n|";
 							$temp="";
