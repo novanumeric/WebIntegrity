@@ -1,10 +1,8 @@
 <?
-
 	require "sharedCode.php";
 
 	$RSFa=1;
-	$FFSLevel=$_REQUEST["FFSLevel"];
-		
+	$FFSLevel=$_REQUEST["FFSLevel"];		
 	$InputType=$_REQUEST["InputType"];
 	$WeldJointEfficiency=$_REQUEST["WeldJointEfficiency"];
 	$ShellType=$_REQUEST["ShellType"];
@@ -23,6 +21,7 @@
 	$tnom=$CalcsUniformThickness;	
 	$LOSS=$_REQUEST["CalcsUniformLoss"];
 	$ThresholdRTS=$_REQUEST["ThresholdRTS"];
+	
 	if(isset($_REQUEST["tmin"])) {
 		$tmin=$_REQUEST["tmin"];
 	} else {
@@ -37,6 +36,7 @@
 	$index=0;
 	$Temperatures="";
 	$Lengths="";
+	
 	for($inch=0;$inch<=6.0;$inch+=0.1) {
 		if($Lengths!="") {
 			$Lengths.=",";
@@ -78,13 +78,6 @@
 			$TemperatureReductions.=calculateTemperatureReduction($RtsInc,$TemperatureUnits);
 		}
 		$TemperatureReduction=calculateTemperatureReduction($Rts,$TemperatureUnits);
-	} else {
-		$TemperatureReduction="";
-		$PlotCount=1;
-		$StressRatios="";
-		$TemperatureReductions="";
-	}
-	if($FFSLevel=="Level 2") {
 		$GMLThicknessCalcResult.="|n|MAT_{nom}=".formatTemperatureResults($MAT,$TemperatureUnits)."|n|";
 
 		$GMLThicknessCalcResult.="|n|T_R=".formatTemperatureResults($TemperatureReduction,$TemperatureUnits)."|n|";
@@ -94,8 +87,13 @@
 			$GMLThicknessCalcResult.="|n|MAT=\\max\\left[MAT_{nom}-T_R,-55\\right]=".formatTemperatureResults(max($MAT-$TemperatureReduction,-55),$TemperatureUnits)."|n|";
 		}
 	} else {
-	$GMLThicknessCalcResult.="|n|MAT=".formatTemperatureResults($MAT,$TemperatureUnits)."|n|";	
+		$TemperatureReduction="";
+		$PlotCount=1;
+		$StressRatios="";
+		$TemperatureReductions="";
+		$GMLThicknessCalcResult.="|n|MAT=".formatTemperatureResults($MAT,$TemperatureUnits)."|n|";
 	}
+
 	$GMLThicknessCalcResult.="|n|{\\color{blue} \\textup{1. MAT may be reduced a further";
 	if($TemperatureUnits=="C") {
 		$GMLThicknessCalcResult.=" 17 C ";
@@ -111,42 +109,39 @@
 
 function calculateMAT($SectionVIIICurve,$inch,$TemperatureUnits) 
 {	
-		//$Temperatures="";
-		if($SectionVIIICurve=="A") {
-			if($inch<=0.394) {
-				$Temperatures=18;
-			} else {
-			
-				$Temperatures=(-76.911+284.85*$inch-27.560*pow($inch,2))/(1.0+1.7971*$inch-0.17887*pow($inch,2));
-			}
-		} else if($SectionVIIICurve=="B") {
-			if($inch<=0.394) {
-				$Temperatures=-20;
-			} else {
-				$Temperatures=(-135.79+171.56*pow($inch,0.5)+103.63*pow($inch,1)-172.0*pow($inch,1.5)+73.737*pow($inch,2)-10.535*pow($inch,2.5));
-			}
-		} else if($SectionVIIICurve=="C") {
-			if($inch<=0.394) {
-				$Temperatures=-55;
-			} else {
-				$Temperatures=101.29-255.5/$inch+287.87/pow($inch,2)-196.42/pow($inch,3)+69.457/pow($inch,4)-9.8082/pow($inch,5);
-			}
-		} else if($SectionVIIICurve=="D") {
-			if($inch<=0.5) {
-				$Temperatures=-55;
-			} else {
-				$Temperatures=-92.965+94.065*$inch-39.812*pow($inch,2)+9.6838*pow($inch,3)-1.1698*pow($inch,4)+0.054687*pow($inch,5);
-			}
+	if($SectionVIIICurve=="A") {
+		if($inch<=0.394) {
+			$Temperatures=18;
+		} else {
+			$Temperatures=(-76.911+284.85*$inch-27.560*pow($inch,2))/(1.0+1.7971*$inch-0.17887*pow($inch,2));
 		}
+	} else if($SectionVIIICurve=="B") {
+		if($inch<=0.394) {
+			$Temperatures=-20;
+		} else {
+			$Temperatures=(-135.79+171.56*pow($inch,0.5)+103.63*pow($inch,1)-172.0*pow($inch,1.5)+73.737*pow($inch,2)-10.535*pow($inch,2.5));
+		}
+	} else if($SectionVIIICurve=="C") {
+		if($inch<=0.394) {
+			$Temperatures=-55;
+		} else {
+			$Temperatures=101.29-255.5/$inch+287.87/pow($inch,2)-196.42/pow($inch,3)+69.457/pow($inch,4)-9.8082/pow($inch,5);
+		}
+	} else if($SectionVIIICurve=="D") {
+		if($inch<=0.5) {
+			$Temperatures=-55;
+		} else {
+			$Temperatures=-92.965+94.065*$inch-39.812*pow($inch,2)+9.6838*pow($inch,3)-1.1698*pow($inch,4)+0.054687*pow($inch,5);
+		}
+	}
+	
 	if($TemperatureUnits=="C") {
 		$Temperatures=($Temperatures-32)/1.8;		
 	}
 	return $Temperatures;
 }	
 
-function calculateTemperatureReduction($Rts,$TemperatureUnits) {
-	//$TemperatureReductions="";
-	
+function calculateTemperatureReduction($Rts,$TemperatureUnits) {	
 	if($Rts>=0.6) {
 		$TemperatureReductions=100*(1-$Rts);
 	} else {
