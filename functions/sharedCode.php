@@ -66,6 +66,12 @@
 		$buf.="^\\circ";
 		return $buf;
 	}
+	function formatTemperatureResults($val,$TemperatureUnits) {
+		$buf="";
+		$buf.=round($val,1);
+		$buf.="^\\circ\\textup{".$TemperatureUnits."}";
+		return $buf;
+	}
 	function formatLengthResultsSquare($val,$LengthUnits) {
 		$buf="";
 		$buf.=round($val,4);

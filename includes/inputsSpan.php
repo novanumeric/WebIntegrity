@@ -43,8 +43,8 @@ Units: <select id="selectUnits" class="updateDisplay"><option>Metric-MPa<option>
 
 
 </table></td></tr>
-<tr><td colspan=2 class="CalcsInputs" id="CalcsPressureRow"             ><span class="WithHints" title="Pressure [Precede by a '-' for External]"                   >Pressure (P):</span>                                  <input class="updateDisplay" id="CalcsPressure" size=5 type="text" value="">                        <span class="PressureUnits"></span>
-	<span class="WithHints" title="Temperature"                  >Temperature (T):</span>                                  <input class="updateDisplay" id="CalcsTemperature" size=3 type="text" value="100">                        <span class="TemperatureUnits"></span></td>
+<tr  ><td class="CalcsInputs"    id="CalcsPressureRow"         ><span class="WithHints" title="Pressure [Precede by a '-' for External]"                   >Pressure (P):</span>                                  <input class="updateDisplay" id="CalcsPressure" size=5 type="text" value="">                        <span class="PressureUnits"></span></td>
+	<td id="TemperatureRow"><span class="WithHints" title="Temperature"                  >Temperature (T):</span>                                  <input class="updateDisplay" id="CalcsTemperature" size=3 type="text" value="100">                        <span class="TemperatureUnits"></span></td>
 </tr>
 
 </table><br>
@@ -64,6 +64,7 @@ Units: <select id="selectUnits" class="updateDisplay"><option>Metric-MPa<option>
 
 
 <tr><td colspan=2 class="CalcsInputs" id="CalcsAllowableStressRow"      ><span class="WithHints" title="Allowable Stress"          >Allowable Stress(S):</span>                           <input class="updateDisplay" id="CalcsAllowableStress" size=5 type="text" value="20">                 <span class="StressUnits"></span></td></tr>
+<tr><td colspan=2 class="CalcsInputs" id="CalcsMatCurveRow"      ><span class="WithHints" title="Material Curve"          >Material Curve:</span>                           <select id="CalcsMatCurveRow" type="text" class="updateDisplay"><option>Section VIII-I</select><select id="SectionVIIICurve" class="updateDisplay"><option>A<option>B<option>C<option>D</select>, Threshold R<sub>TS</sub>: <input type="text" id="ThresholdRTS" value="0.3" size=2 >                 </td></tr>
 
 <tr><td  colspan=2 id="InputTypeRow"><span class="WithHints" title="Select Thickness Reading Form"> Input Type:</span> <select class="updateDisplay" id="selectInputType"><option>Critical Thickness Profile(CTP)<option>Thickness Grid(GRID)<option>Point Thickness Readings(PTR)</select></td></tr>
 

@@ -21,9 +21,17 @@ function displayBrittle() {
 			FFSLevel:$("#selectFFSLevel").val(),
 			InputType:$("#selectInputType").val(),
 			ShellType:$("#selectShellType").val(),
+			SectionVIIICurve:$("#SectionVIIICurve").val(),
+			LengthUnits:window.LengthUnits,
+			ThresholdRTS:$("#ThresholdRTS").val(),
+			StressUnits:window.StressUnits,
+			PressureUnits:window.PressureUnits, 
+			TemperatureUnits:window.TemperatureUnits,
 			LengthUnits:window.LengthUnits,
 			FCA:$("#CalcsCorrosionAllowance").val(),
-			tnom:$("#CalcsUniformThickness").val()
+			CalcsUniformLoss:$("#CalcsUniformLoss").val(),
+			CalcsUniformThickness:$("#CalcsUniformThickness").val(),
+			SectionVIIICurve:$("#SectionVIIICurve").val()
 		}}).done(	function displayResultsFinal(data) {
 			if(data.GMLThicknessCalcResult!="") {
 				$("#GMLThicknessCalcResult").show();
@@ -31,58 +39,95 @@ function displayBrittle() {
 			} else {
 				$("#GMLThicknessCalcResult").hide();
 			}
-			
+			$("#TempReduction").html("");			
+			$("#GovThickness").html("");
+			var myData = new Array();
+			dataSplitT=data.Temperatures.split(",");
+			dataSplitL=data.Lengths.split(",");
+			for (i=0;i<dataSplitT.length;i++) {
+				var b=new Array(2);
+				b[0]=parseFloat(dataSplitL[i]);
+				b[1]=parseFloat(dataSplitT[i]);
+				myData.push(b);
+			}
+		
+			var plot2 = $.jqplot ('GovThickness', [myData,[[$("#CalcsUniformThickness").val(),data.MAT]]], {
+				series:[
+					{showMarker:false},
+					{showMarker:true,showLine:false,markerOptions:{ size: 5, style:"x" }}
+				],
+				  // Give the plot a title.
+				 title: '',
+				  // You can specify options for all axes on the plot at once with
+				  // the axesDefaults object.  Here, we're using a canvas renderer
+				  // to draw the axis label which allows rotated text.
+				  axesDefaults: {
+					labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+				  },
+				  
+				  // An axes object holds options for all axes.
+				  // Allowable axes are xaxis, x2axis, yaxis, y2axis, y3axis, ...
+				  // Up to 9 y axes are supported.
+				 // {yaxis:'yaxis',showMarker:true,showLine:false,markerOptions:{ size: 3, style:markerStyle }}
+				  axes: {
+					// options for each axis are specified in seperate option objects.
+					xaxis: {
+					  label: data.XAxisLabel,
+					  // Turn off "padding".  This will allow data point to lie on the
+					  // edges of the grid.  Default padding is 1.2 and will keep all
+					  // points inside the bounds of the grid.
+					  pad: 0
+					},
+					yaxis: {
+						
+					  label: data.YAxisLabel
+					}
+				  }
+				});
+				if(data.PlotCount>1) {
+					$("#TempReduction").show();
+					var myData = new Array();
+					dataSplitL=data.TemperatureReductions.split(",");
+					dataSplitT=data.StressRatios.split(",");
+					for (i=0;i<dataSplitT.length;i++) {
+						var b=new Array(2);
+						b[0]=parseFloat(dataSplitL[i]);
+						b[1]=parseFloat(dataSplitT[i]);
+						myData.push(b);
+					}
+
+
+					var plot2 = $.jqplot ('TempReduction', [myData,[[data.TR,data.RTS]]], {
+					series:[{showMarker:false},
+					{showMarker:true,showLine:false,markerOptions:{ size: 5, style:"x" }}],
+					  // Give the plot a title.
+					 // title: 'Temperature Reduction',
+					  // You can specify options for all axes on the plot at once with
+					  // the axesDefaults object.  Here, we're using a canvas renderer
+					  // to draw the axis label which allows rotated text.
+					  axesDefaults: {
+						labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+					  },
+					  // An axes object holds options for all axes.
+					  // Allowable axes are xaxis, x2axis, yaxis, y2axis, y3axis, ...
+					  // Up to 9 y axes are supported.
+					  axes: {
+						// options for each axis are specified in seperate option objects.
+						xaxis: {
+						  label: data.XAxisLabel2,
+						  // Turn off "padding".  This will allow data point to lie on the
+						  // edges of the grid.  Default padding is 1.2 and will keep all
+						  // points inside the bounds of the grid.
+						  pad: 0
+						},
+						yaxis: {
+						  label: data.YAxisLabel2
+						}
+					  }
+					});
+				} else {
+					$("#TempReduction").hide();
+
+				}
 		});	
-	var plot2 = $.jqplot ('GovThickness', [[3,7,9,1,4,6,8,2,5]], {
-		  // Give the plot a title.
-		  title: 'Governing Plate Thickness',
-		  // You can specify options for all axes on the plot at once with
-		  // the axesDefaults object.  Here, we're using a canvas renderer
-		  // to draw the axis label which allows rotated text.
-		  axesDefaults: {
-			labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-		  },
-		  // An axes object holds options for all axes.
-		  // Allowable axes are xaxis, x2axis, yaxis, y2axis, y3axis, ...
-		  // Up to 9 y axes are supported.
-		  axes: {
-			// options for each axis are specified in seperate option objects.
-			xaxis: {
-			  label: "X Axis",
-			  // Turn off "padding".  This will allow data point to lie on the
-			  // edges of the grid.  Default padding is 1.2 and will keep all
-			  // points inside the bounds of the grid.
-			  pad: 0
-			},
-			yaxis: {
-			  label: "Y Axis"
-			}
-		  }
-		});
-		 var plot2 = $.jqplot ('TempReduction', [[3,7,9,1,4,6,8,2,5]], {
-		  // Give the plot a title.
-		  title: 'Temperature Reduction',
-		  // You can specify options for all axes on the plot at once with
-		  // the axesDefaults object.  Here, we're using a canvas renderer
-		  // to draw the axis label which allows rotated text.
-		  axesDefaults: {
-			labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-		  },
-		  // An axes object holds options for all axes.
-		  // Allowable axes are xaxis, x2axis, yaxis, y2axis, y3axis, ...
-		  // Up to 9 y axes are supported.
-		  axes: {
-			// options for each axis are specified in seperate option objects.
-			xaxis: {
-			  label: "X Axis",
-			  // Turn off "padding".  This will allow data point to lie on the
-			  // edges of the grid.  Default padding is 1.2 and will keep all
-			  // points inside the bounds of the grid.
-			  pad: 0
-			},
-			yaxis: {
-			  label: "Y Axis"
-			}
-		  }
-	});
 }

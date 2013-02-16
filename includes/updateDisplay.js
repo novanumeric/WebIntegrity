@@ -8,7 +8,14 @@ function updateDisplay() {
 	if($("#selectAnalysisProcedure").val().indexOf("Local Thickness Area - LTA")>0) {
 		$("#selectCriteria").val("MAWP");		
 		$("#FFSCriteriaType").hide();
-	} else {
+		$("#TemperatureRow").show();
+		$("#CalcsMatCurveRow").hide();
+	} else if($("#selectAnalysisProcedure").val().indexOf("Brittle Fracture")>0) {
+		$("#TemperatureRow").hide();
+		$("#CalcsMatCurveRow").show();
+	}else {
+		$("#CalcsMatCurveRow").hide();
+		$("#TemperatureRow").show();
 		$("#FFSCriteriaType").show();
 	}
 	$temp=$("#selectDesignCode").val();
@@ -170,6 +177,7 @@ function updateDisplay() {
 				MaterialID:$("#selectMaterial").val(),
 				StressUnits:window.StressUnits,
 				TemperatureUnits:window.TemperatureUnits,
+				AnalysisProcedure:"Brittle Fracture",
 				Temperature:$("#CalcsTemperature").val()
 				}}).done(function displaySchedules(data) {
 			
@@ -191,7 +199,7 @@ function updateDisplay() {
 	$("#selectCodeYear").html('');
 	$.ajax({ type: 'POST', 	url:'functions/materialProperties.php',
 		async: false, 	dataType: "json",
-		data:{ 					DesignCode:$("#selectDesignCode").val(),RequestType:'CodeYear'}}).done(function displaySchedules(data) {
+		data:{ 				AnalysisProcedure:"Brittle Fracture",DesignCode:$("#selectDesignCode").val(),RequestType:'CodeYear'}}).done(function displaySchedules(data) {
 			$.each(data, function(key, value) {
 				$("#selectCodeYear").append("<option value=\'"+value+"\'>"+value);
 			}
@@ -208,6 +216,7 @@ function updateDisplay() {
 			CodeYear:$("#selectCodeYear").val(),
 			ProductForm:$("#selectProductForm").val(),
 			NominalComposition:$("#selectNominalComposition").val(),
+			AnalysisProcedure:"Brittle Fracture",
 			SpecNo:$("#selectSpecNo").val()
 		}}).done(function displaySchedules(data) {
 			
@@ -233,6 +242,7 @@ function updateDisplay() {
 		async: false, 	dataType: "json",
 		data:{ 	RequestType:'NominalComposition',
 			DesignCode:$("#selectDesignCode").val(),
+			AnalysisProcedure:"Brittle Fracture",
 			CodeYear:$("#selectCodeYear").val(),
 			ProductForm:$("#selectProductForm").val(),
 			SpecNo:$("#selectSpecNo").val()
