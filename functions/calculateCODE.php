@@ -167,7 +167,7 @@ class CodeCalculationsClass
 				}	
 				$RSFa=0.9;
 				
-				$MAWP=min($this->RSFM,$RSFa)/$RSFa*$MAWP;
+				$MAWP=min($this->RSF,$RSFa)/$RSFa*$MAWP;
 				$Equation.="|n|MAWP_r=MAWP\\frac{RSF}{RSF_a}=".formatPressureResults($MAWP,$this->PressureUnits)."|n|";
 			} else {
 				if($this->ShellType=="Toricone") {
